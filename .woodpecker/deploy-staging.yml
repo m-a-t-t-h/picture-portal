@@ -1,0 +1,104 @@
+when:
+  - event: push
+    evaluate: '(CI_COMMIT_MESSAGE contains "[#staging]")'
+
+steps:
+
+  - name: setup_environment
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
+        mkdir -p $DEPLOYMENT_PATH &&
+        mkdir -p $DEPLOYMENT_PATH/deployments &&
+        mkdir -p $DEPLOYMENT_PATH/webserver"
+
+
+  - name: clone_repo
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+      GITHUB_REPO:      { from_secret: github_repo }
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
+        cd $DEPLOYMENT_PATH
+        && git clone -b ${CI_COMMIT_BRANCH} --single-branch  $GITHUB_REPO deployments/deployment-${CI_PIPELINE_NUMBER}
+        && cp $DEPLOYMENT_PATH/webserver/.env $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}"
+
+
+  - name: npm_build
+    depends_on: [ clone_repo ]
+    image: bash
+
+    commands:
+      - docker run -v ".:/usr/src/app"  -w /usr/src/app -i node:24.11.1 sh -c "npm i && npm run build"
+
+
+  - name: upload_built_assets
+    depends_on: [ npm_build ]
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/public/build/
+
+
+  - name: composer_install
+    depends_on: [ clone_repo ]
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
+        cd $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}
+        && composer install"
+
+
+  - name: bring_deployment_live
+    depends_on: [ composer_install, upload_built_assets ]
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      NGINX_PATH:       { from_secret: nginx_vhost_path }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
+        sudo rm -f $NGINX_PATH
+        && sudo cp $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/.infra/staging/nginx.conf $DEPLOYMENT_PATH/webserver/nginx.conf
+        && sudo ln -s $DEPLOYMENT_PATH/webserver/nginx.conf $NGINX_PATH
+        && sudo rm -f $DEPLOYMENT_PATH/live
+        && sudo ln -s $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER} $DEPLOYMENT_PATH/live
+        && sudo chown www-data:www-data $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R
+        && sudo ln -s $DEPLOYMENT_PATH/images/ $DEPLOYMENT_PATH/live/public/images
+        && sudo service nginx restart
+        "

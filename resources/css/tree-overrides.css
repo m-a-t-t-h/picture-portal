@@ -1,0 +1,64 @@
+@reference "tailwindcss";
+
+.treeview {
+    font-family: "Inter", sans-serif !important;
+    color:       black;
+}
+
+.treeview-node__root {
+    display:       flex;
+    align-items:   center;
+    min-height:    26px !important;
+    padding: 4px;
+    padding-bottom: 0;
+    position:      relative;
+    font-size:     24px !important;
+}
+
+.treeview-node--click {
+    @apply m-0 p-0;
+}
+
+.treeview-node__content {
+    img {
+        width:       12px !important;
+        height:      10px !important;
+        margin-top:  0;
+        margin-left: 0;
+    }
+
+    label.m-checkbox {
+        span {
+            @apply text-[12pt];
+        }
+    }
+
+    .m-checkbox > span:before {
+        margin-top:  -4px;
+        margin-left: -1px;
+    }
+}
+
+.treeview-node__toggle {
+    width:      20px !important;
+    height:     18px !important;
+    color:      black !important;
+    margin-top: 6px;
+}
+
+.m-checkbox {
+    font-size:   14px;
+    padding-top: 6px;
+}
+
+.treeview-node__level {
+    width: 17px;
+}
+
+
+.v-dialog-header {
+}
+
+.v-dialog, .v-dialog-body, .v-dialog-header, .v-dialog-content {
+    @apply max-w-[360px] ;
+}

@@ -1,0 +1,30 @@
+{
+  "id":               "09198ca0-c812-4621-998c-a0c812000010",
+  "name":             "Photopics v0.1.2",
+  "icons":            [
+    {
+      "src":   "pwa/512.png",
+      "type":  "image/png",
+      "sizes": "512x512"
+    }, {
+      "src":   "pwa/192.png",
+      "type":  "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url":        "https://digikamweb.base10.webdevops.uk",
+  "display":          "standalone",
+  "display-override": ["standalone", "minimal-ui","browser"],
+  "screenshots":      [
+    {
+      "src":         "pwa/screenshot.png",
+      "sizes":       "1280x720",
+      "type":        "image/png",
+      "form_factor": "wide"
+    },{
+      "src":         "pwa/screenshot.png",
+      "sizes":       "1280x720",
+      "type":        "image/png"
+    }
+  ]
+}
