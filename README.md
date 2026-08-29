@@ -1,9 +1,11 @@
-## DigiKamWeb - Very much a work in progress
+## DigiKamWeb* - Very much a work in progress
 
-The goal is to provide a platform to provide a sleek web UI to serve a collection of 
-images managed through KDE's DigiKam software.
+You're an avid digital photographer with a large collection of well managed and tagged
+photos that you want to filter and view through a sleek mobile-first web UI? And you
+use DigiKam to manage your collection and tags?
 
+You're in luck!
 
-This project is not associated with KDE or its projects or developers.
+... but you're a bit early.
 
-Test
+*This project is not associated with KDE or its projects or developers.
