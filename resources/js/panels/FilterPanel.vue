@@ -42,7 +42,16 @@ const selectedOnly        = (event) => {
         treeRef.value.showCheckedNodes(false);
     }
 };
-const orderBy            = ref(state.prefs.orderBy);
+const orderBy             = ref(state.prefs.orderBy);
+const orderByOptions      = [
+    {label: 'ID (asc)', value: '1'},
+    {label: 'ID (desc)', value: '2'},
+    {label: 'Filename (asc)', value: '3'},
+    {label: 'Filename (desc)', value: '4'},
+    {label: 'Digitization date (asc)', value: '5'},
+    {label: 'Digitization date (desc)', value: '6'},
+    {label: 'Random', value: '7'}
+];
 
 onMounted(async () => {
     treeData         = await state.getTree;
@@ -64,7 +73,7 @@ onMounted(async () => {
     }
 });
 watch(orderBy, async (newval) => {
-   state.setOrderBy(orderBy);
+    state.setOrderBy(orderBy);
 });
 </script>
 
@@ -75,7 +84,7 @@ watch(orderBy, async (newval) => {
                 <h1>Filter</h1>
                 <div class="icon-wrapper flex flex-row items-center">
                     <div class=" border-r-2 border-r-slate-200 pr-3 mr-3 block">
-                        <Select v-model="orderBy" :options="[{label: 'ID (asc)', value: '1'},{label: 'ID (desc)', value: '2'},{label: 'Filename (asc)', value: '3'},{label: 'Filename (desc)', value: '4'},{label: 'Digitization date (asc)', value: '5'},{label: 'Digitization date (desc)', value: '6'}]"  placeholder="Order by"></Select>
+                        <Select v-model="orderBy" :options="orderByOptions" placeholder="Order by"></Select>
                     </div>
                     <button @click="selectedOnly">
                         <img src="/svg/checkbox-checked.svg" class="w-6 h-6" alt="Show selected only"></button>

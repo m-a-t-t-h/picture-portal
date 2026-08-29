@@ -42,6 +42,7 @@ trait ImageQueryMiddleware
             "4" => "img_name DESC",
             "5" => "img_digitization_date ASC",
             "6" => "img_digitization_date DESC",
+            "7" => "rand()"
         };
 
         switch ($this->order_by) {
