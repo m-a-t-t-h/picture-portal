@@ -47,6 +47,6 @@ defineProps({
     height: 100%;
     padding: 0;
     overflow-y: auto;
-    box-shadow: 0 0 10px #000;
+    box-shadow: 0 0 30px #000;
 }
 </style>
