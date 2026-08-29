@@ -35,6 +35,22 @@ trait ImageQueryMiddleware
             $enforce_public = " AND tag_chain LIKE '%,$public_tag_id,%'";
         }
 
+        $orderByStr = match ($this->order_by) {
+            "1" => "img_id ASC",
+            "2" => "img_id DESC",
+            "3" => "img_name ASC",
+            "4" => "img_name DESC",
+            "5" => "img_digitization_date ASC",
+            "6" => "img_digitization_date DESC",
+        };
+
+        switch ($this->order_by) {
+            case 1: // id-asc
+                $orderByStr = "img_id";
+                break;
+
+        }
+
         foreach ($tag_filters as $idx => $filter_tag_id) {
             $filter_definitions .= "\n    filter$filter_tag_id as (select IM.id from Images IM LEFT JOIN ImageTags IT on IM.id = IT.imageid where tagid = $filter_tag_id),";
             $filter_references  .= " IM.id in (SELECT id FROM filter$filter_tag_id) AND ";
@@ -69,6 +85,7 @@ WITH $filter_definitions
                         IM.name          AS  img_name,
                         II.rating        AS  img_rating,
                         II.creationDate  AS  img_creation_date,
+                        II.digitizationDate AS img_digitization_date,
                         tag_path         AS  img_tag_path,
                         II.width         AS  img_width,
                         II.height        AS  img_height,
@@ -92,7 +109,7 @@ WITH $filter_definitions
 select * 
 from query4
 group by img_id
-order by img_creation_date desc
+order by $orderByStr
 LIMIT $page, $page_size
 SQL;
         $this->raw_sql = $sql;
@@ -130,6 +147,13 @@ SQL;
         Log::debug("Tag filters: [" . implode(",", $tags) . "]");
 
         $this->tag_filters = $tags;
+
+        return $this;
+    }
+
+    public function setOrderBy($value): self
+    {
+        $this->order_by = $value;
 
         return $this;
     }

@@ -3,6 +3,16 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+:root {
+    /* This is all just to persuade the Select component to render its list in a panel */
+    [data-assembled-select] {
+        --vs-width: 170px !important;
+    }
+    [data-reka-popper-content-wrapper] {
+        z-index: 9999 !important;
+    }
+}
+
 @theme {
     --font-sans: "Inter", 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
                  'Segoe UI Symbol', 'Noto Color Emoji';
@@ -344,4 +354,9 @@ button.btn {
         @apply mx-auto;
         @apply w-6;
     }
+}
+
+
+data-reka-popper-content-wrapper {
+    z-index: 9999;
 }

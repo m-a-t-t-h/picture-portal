@@ -17,6 +17,7 @@ export const useStateStore = defineStore(key, {
         prefs: {
             results: [],
             tag_filter: "",
+            orderBy: "1",
             showFilename: false,
             showTagsBelow: true,
             showTagId: false,
@@ -56,7 +57,11 @@ export const useStateStore = defineStore(key, {
         },
         setTagFilter(filter) {
             this.prefs.tag_filter = filter;
-            window.dispatchEvent(new CustomEvent("filter-updated", {detail: filter}));
+            window.dispatchEvent(new CustomEvent("filter-updated", {detail: {filter: filter, orderBy: this.prefs.orderBy}}));
+        },
+        setOrderBy(value) {
+            this.prefs.orderBy = value;
+            window.dispatchEvent(new CustomEvent("filter-updated", {detail: {filter: this.prefs.tag_filter, orderBy: this.prefs.orderBy}}));
         },
         toggleShowFilename() {
             this.prefs.showFilename = !this.prefs.showFilename;

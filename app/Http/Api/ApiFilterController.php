@@ -11,9 +11,10 @@ class ApiFilterController extends Controller
 
     protected array  $raw_query_results;
     protected array  $tag_filters;
+    protected string $order_by;
     protected string $raw_sql;
 
-    public function post(array $filter_tags = [], $page = 0)
+    public function post(array $filter_tags = [], $page = 0, $orderBy=0)
     {
         Log::debug(__METHOD__);
 
@@ -39,10 +40,15 @@ class ApiFilterController extends Controller
             $page = $body["page"];
         }
 
+        if (!$orderBy) {
+            $orderBy = $body["orderBy"];
+        }
+
         if (count($filter_tags)) {
 
             $results = $this->newQuery()
                 ->setTagFilter($filter_tags)
+                ->setOrderBy($orderBy)
                 ->setPage($page)
                 ->prepareQuery()
                 ->debugLogQuery($do_logging)

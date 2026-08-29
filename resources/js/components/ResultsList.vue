@@ -13,6 +13,7 @@ async function loadMore() {
     const filter = state.prefs.tag_filter;
     if (filter) {
         console.log("Loading filtered data", filter);
+        let orderBy = state.prefs.orderBy;
         let currentData = structuredClone(toRaw(resultsList.value));
 
         fetch("/results", {
@@ -20,6 +21,7 @@ async function loadMore() {
             headers: {"Content-Type": "application/json", "X-CSRF-TOKEN": token},
             body: JSON.stringify({
                 filter: filter,
+                orderBy: orderBy,
                 page: page
             })
         }).then(response => response.json()).then(data => {
