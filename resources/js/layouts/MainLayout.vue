@@ -5,7 +5,7 @@ import FilterPanel from "../panels/FilterPanel.vue";
 import {ref} from "vue";
 import MainMenuPanel from "../panels/MainMenuPanel.vue";
 
-const filterPanelOpen   = ref(false);
+const filterPanelOpen   = ref(true);
 const settingsPanelOpen = ref(false);
 const isMainMenuOpen      = ref(false);
 
