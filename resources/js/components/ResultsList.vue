@@ -1,9 +1,11 @@
 <script setup>
-import {onMounted, reactive, useTemplateRef, ref, toRaw} from 'vue';
+import {onMounted, reactive, ref, toRaw} from 'vue';
 import {useStateStore} from "../services/state.js";
+import {useRouter} from "vue-router";
 
 let resultsList = reactive([]);
 const state     = useStateStore();
+const router    = useRouter();
 let showShield  = ref(false);
 let page        = 0;
 let isInView    = false;
@@ -13,7 +15,7 @@ async function loadMore() {
     const filter = state.prefs.tag_filter;
     if (filter) {
         console.log("Loading filtered data", filter);
-        let orderBy = state.prefs.orderBy;
+        let orderBy     = state.prefs.orderBy;
         let currentData = structuredClone(toRaw(resultsList.value));
 
         fetch("/results", {
@@ -71,6 +73,11 @@ onMounted(() => {
 
 const imgClicked = function (photo) {
 
+    state.setSelectedPhoto(photo);
+    router.push("/dw/image/" + photo.img_id);
+
+    return;
+
     let element = window.document.getElementById("img_" + photo.img_id);
     if (element) {
         console.log("Zooming element");
@@ -90,7 +97,7 @@ const imgClicked = function (photo) {
             element.style.position  = "inherit";
             element.style.minHeight = "inherit";
             element.style.height    = "inherit";
-            element.style.width    = "100%";
+            element.style.width     = "100%";
 
 
             window.document.getElementById("footer").style.display = "flex";
@@ -129,47 +136,60 @@ const imgClicked = function (photo) {
                         <audio class="format_mp3" controls :src="photo.img_path"></audio>
                     </div>
 
-                    <div v-else-if="photo.img_format==='JPG' || photo.img_format==='GIF' || photo.img_format==='PNG' || photo.img_format==='WEBP' || photo.img_format==='AVIF'"
-                         @click="imgClicked(photo)">
-                        <img :id="`img_${photo.img_id}`" class="format_img" style="transition: transform-all 0.5s ease" :src="photo.img_path" loading="lazy" decoding="async" :alt="photo.img_path">
-                    </div>
+                    <div v-else-if="photo.img_format==='JPG' || photo.img_format==='GIF' || photo.img_format==='PNG' || photo.img_format==='WEBP' || photo.img_format==='AVIF'" @click="imgClicked(photo)">
 
-                    <div v-else>
-                        <div class="">{{ photo.img_format }} is not yet supported</div>
-                    </div>
+                        <div class="relative">
+                            <img :id="`img_${photo.img_id}`" class="format_img z-10" :src="photo.img_path" loading="lazy" decoding="async" :alt="photo.img_path">
+                            <div v-if="state.prefs.showCameraInfo" class=" rounded-lg  relative inset-0 -mt-10 h-10  text-slate-700 w-full z-20 text-xs ">
+                                <div class="flex flex-col bg-slate-200/80 p-1 px-2">
+                                    <div>{{ photo.camera_model }}</div>
+                                    <div>f{{ photo.camera_aperture}} 1/{{ photo.camera_focalLength}}" ISO{{photo.camera_iso}}</div>
+                                </div>
+                            </div>
 
-                    <div v-if="state.prefs.showRating" class="img_rating">
-                        <div class="img_rating_star" v-if="photo.img_rating>=1">
-                            <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
-                        <div class="img_rating_star" v-if="photo.img_rating>=2">
-                            <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
-                        <div class="img_rating_star" v-if="photo.img_rating>=3">
-                            <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
-                        <div class="img_rating_star" v-if="photo.img_rating>=4">
-                            <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
-                        <div class="img_rating_star" v-if="photo.img_rating>=5">
-                            <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
-                    </div>
+                            </div>
 
-                    <div v-if="state.prefs.showTagsBelow" class="img_tags">
-                        <div v-for="(item, index) in photo.tags" :key="item" class="img_tag">
-                            <span class="img_tag_name">#{{ item.name }}</span>
-                            <span class="img_tag_id" v-if="state.prefs.showTagId">({{ item.id }})</span>
+                        </div>
+
+                        <div v-else>
+                            <div class="">{{ photo.img_format }} is not yet supported</div>
+                        </div>
+
+                        <div v-if="state.prefs.showRating" class="img_rating">
+                            <div class="img_rating_star" v-if="photo.img_rating>=1">
+                                <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
+                            <div class="img_rating_star" v-if="photo.img_rating>=2">
+                                <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
+                            <div class="img_rating_star" v-if="photo.img_rating>=3">
+                                <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
+                            <div class="img_rating_star" v-if="photo.img_rating>=4">
+                                <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
+                            <div class="img_rating_star" v-if="photo.img_rating>=5">
+                                <img class="img_rating_star_filled" src="/svg/star-filled.svg"></div>
+                        </div>
+
+                        <div v-if="state.prefs.showTagsBelow" class="img_tags">
+                            <div v-for="(item, index) in photo.tags" :key="item" class="img_tag">
+                                <span class="img_tag_name">#{{ item.name }}</span>
+                                <span class="img_tag_id" v-if="state.prefs.showTagId">({{ item.id }})</span>
+                            </div>
+                        </div>
+                        <div v-if="state.prefs.showPath" class="pt-1">
+                            <div class="text-xs rounded bg-slate-300 mr-1 p-1 overflow-hidden">{{
+                                    photo.img_path
+                                }}
+                            </div>
+                        </div>
+                        <div v-if="state.prefs.showImageId" class="pt-1">
+                            <div class="text-xs rounded bg-slate-300 mr-1 p-1 overflow-hidden">{{ photo.img_id }}</div>
                         </div>
                     </div>
-                    <div v-if="state.prefs.showPath" class="pt-1">
-                        <div class="text-xs rounded bg-slate-300 mr-1 p-1 overflow-hidden">{{ photo.img_path }}</div>
-                    </div>
-                    <div v-if="state.prefs.showImageId" class="pt-1">
-                        <div class="text-xs rounded bg-slate-300 mr-1 p-1 overflow-hidden">{{ photo.img_id }}</div>
-                    </div>
+                    <div v-if="idx===(resultsList.value.length - 5)" ref="sentinel" id="sentinel"></div>
                 </div>
-                <div v-if="idx===(resultsList.value.length - 5)" ref="sentinel" id="sentinel"></div>
+            </div>
+            <div v-else class="flex flex-col justify-center items-center border p-12 m-12 rounded bg-gray-100">
+                <div class="font-bold text-xl">Welcome!</div>
+                <div class="mt-12">Use the filter icon in the footer toolbar to start</div>
             </div>
         </div>
-        <div v-else class="flex flex-col justify-center items-center border p-12 m-12 rounded bg-gray-100">
-            <div class="font-bold text-xl">Welcome!</div>
-            <div class="mt-12">Use the filter icon in the footer toolbar to start</div>
-        </div>
-    </div>
 </template>

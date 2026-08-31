@@ -25,6 +25,7 @@ export const useStateStore = defineStore(key, {
             showTimestamp: false,
             showImageId: false,
             showRating: false,
+            showCameraInfo: false,
             selected_photo: null,
         }
     }),
@@ -83,6 +84,9 @@ export const useStateStore = defineStore(key, {
         },
         toggleShowImageId() {
             this.prefs.showImageId = !this.prefs.showImageId;
+        },
+        toggleShowCameraInfo() {
+            this.prefs.showCameraInfo = !this.prefs.showCameraInfo;
         },
     }
 });

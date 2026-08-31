@@ -151,6 +151,8 @@ class Tags extends Model
             
             GROUP BY IM.id;
 SQL;
+        \Log::debug($sql);
+
         DB::query($sql, [$tag_id, $album_id, $month, $day]);
 
     }

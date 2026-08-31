@@ -93,7 +93,13 @@ WITH $filter_definitions
                         II.format        AS  img_format,
                         IM.filesize      AS  img_size,
                         concat('/images', relativePath, '/', IM.name) AS img_path,
-                        tag_chain
+                        tag_chain,
+                        IMD.make as camera_make,
+                        IMD.model as camera_model,
+                        IMD.lens as camera_lens,
+                        IMD.aperture as camera_aperture,
+    IMD.focalLength as camera_focalLength,
+    IMD.sensitivity AS camera_iso
 
                 from query3
                          LEFT JOIN ImageTags IT ON IT.tagid = tag_id
@@ -101,6 +107,8 @@ WITH $filter_definitions
                          LEFT JOIN Albums AL ON AL.id = IM.album
                          LEFT JOIN AlbumRoots AR ON AR.id = AL.albumRoot
                          LEFT JOIN ImageInformation II ON II.imageid = IM.id
+                         LEFT JOIN ImagePositions IP ON IP.imageid=IM.id
+                         LEFT JOIN ImageMetadata IMD ON IMD.imageid=IM.id
         WHERE   II.format<>'RAW-NEF'
                 AND AR.id=$root_collection_id   
                 AND $filter_references
@@ -114,7 +122,6 @@ order by $orderByStr
 LIMIT $page, $page_size
 SQL;
         $this->raw_sql = $sql;
-        Log::debug($sql);
 
         return $this;
     }
