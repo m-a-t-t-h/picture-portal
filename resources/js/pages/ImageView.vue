@@ -38,7 +38,6 @@ async function loadImage() {
 
         <div class="image_row">
             <img class="" :id="`img_${photo.img_id}`" style="transition: transform-all 0.5s ease" :src="photo.img_path" loading="lazy" decoding="async" :alt="photo.img_path"/>
-        </div>
         <div class="info_row">
 
             <div class="lhs">
@@ -85,6 +84,7 @@ async function loadImage() {
 
 
             </div>
+        </div>
 
         </div>
 

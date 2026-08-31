@@ -359,7 +359,7 @@ button.btn {
     @apply flex flex-col h-screen overflow-hidden p-0 bg-slate-700;
 
     .image_row {
-        @apply max-w-3/4 max-h-3/4 mx-auto  p-1;
+        @apply max-w-3/4 max-h-3/4 mx-auto p-1;
 
         img {
             @apply max-h-full;
@@ -368,15 +368,13 @@ button.btn {
     }
 
     .info_row {
-        @apply grid grid-cols-2 max-w-3/4 w-3/4 text-xs bg-slate-700 mx-auto;
-/*        @apply  overflow-scroll;*/
-
+        @apply grid grid-cols-2 w-full text-xs bg-slate-500 mx-auto;
 
         .lhs {
-            @apply  flex flex-col ;
+            @apply  flex flex-col w-100 text-right;
         }
         .rhs {
-            @apply  flex flex-col max-h-fit;
+            @apply  flex flex-col w-100;
         }
 
         .field {
