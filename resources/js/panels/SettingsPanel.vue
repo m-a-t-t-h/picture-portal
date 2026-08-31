@@ -84,6 +84,13 @@ const emits = defineEmits([ "settings-panel-toggle"]);
                     </label>
                 </div>
 
+                <div class="field">
+                    <label for="showImageCameraInfo" class="hover:cursor-pointer" :class="{'disabled':!user}">
+                        <input type="checkbox" id="showImageCameraInfo" :checked="state.prefs.showCameraInfo" @change="state.toggleShowCameraInfo"  :disabled="!user">
+                        <span>Show camera info</span>
+                    </label>
+                </div>
+
             </div>
         </div>
 

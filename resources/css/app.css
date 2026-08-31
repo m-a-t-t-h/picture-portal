@@ -5,9 +5,11 @@
 
 :root {
     /* This is all just to persuade the Select component to render its list in a panel */
+
     [data-assembled-select] {
         --vs-width: 170px !important;
     }
+
     [data-reka-popper-content-wrapper] {
         z-index: 9999 !important;
     }
@@ -301,6 +303,7 @@
         @apply fixed inset-x-0 top-0 h-12 p-1 px-1;
         @apply bg-slate-700 text-slate-300;
         @apply flex flex-row justify-between items-center;
+
         h1 {
             @apply text-lg;
         }
@@ -315,10 +318,9 @@
     }
 
     .main-content-wrapper {
-        @apply flex flex-1 flex-col pt-12 max-h-full;
+        @apply flex flex-col pt-12 ;
 
         .main-content {
-            @apply flex-1 overflow-y-auto;
         }
     }
 
@@ -330,9 +332,6 @@
         border: 1px solid white;
         @apply hover:bg-gray-100 hover:border-black;
     }
-
-
-
 }
 
 .btn-link {
@@ -356,7 +355,42 @@ button.btn {
     }
 }
 
+.image_info {
+    @apply flex flex-col h-screen overflow-hidden p-0 bg-slate-700;
 
-data-reka-popper-content-wrapper {
-    z-index: 9999;
+    .image_row {
+        @apply max-w-3/4 max-h-3/4 mx-auto p-1;
+
+        img {
+            @apply max-h-full;
+            @apply object-center;
+        }
+    }
+
+    .info_row {
+        @apply grid grid-cols-2 w-full text-xs bg-slate-500 mx-auto;
+
+        .lhs {
+            @apply  flex flex-col w-100 text-right;
+        }
+        .rhs {
+            @apply  flex flex-col w-100;
+        }
+
+        .field {
+            @apply flex flex-row;
+            @apply border p-1 m-1;
+            @apply h-8 items-center;
+
+            .label {
+                @apply flex-1;
+                @apply text-slate-200;
+            }
+
+            .value {
+                @apply flex-2;
+                @apply text-green-500;
+            }
+        }
+    }
 }
