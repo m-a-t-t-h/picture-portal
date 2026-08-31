@@ -1,4 +1,4 @@
-## DigiKamWeb* - Very much a work in progress
+## PicturePortal* - Very much a work in progress
 
 You're an avid digital photographer with a large collection of well managed and tagged
 photos that you want to filter and view through a sleek mobile-first web UI? And you
