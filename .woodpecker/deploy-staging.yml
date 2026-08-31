@@ -93,9 +93,7 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-        sudo rm -f $NGINX_PATH
         && sudo cp $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/.infra/staging/nginx.conf $DEPLOYMENT_PATH/webserver/nginx.conf
-        && sudo ln -s $DEPLOYMENT_PATH/webserver/nginx.conf $NGINX_PATH
         && sudo rm -f $DEPLOYMENT_PATH/live
         && sudo ln -s $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER} $DEPLOYMENT_PATH/live
         && sudo chown www-data:www-data $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R
