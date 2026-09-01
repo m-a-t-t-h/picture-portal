@@ -36,7 +36,8 @@ steps:
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
         cd $DEPLOYMENT_PATH
         && git clone -b ${CI_COMMIT_BRANCH} --single-branch  $GITHUB_REPO deployments/deployment-${CI_PIPELINE_NUMBER}
-        && cp $DEPLOYMENT_PATH/webserver/.env $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}"
+        && cd deployments/deployment-${CI_PIPELINE_NUMBER}
+        && ln -s ../../webserver/.env"
 
 
   - name: npm_build
@@ -93,9 +94,9 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-           sudo rm -f $DEPLOYMENT_PATH/live
-        && sudo ln -s $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER} $DEPLOYMENT_PATH/live
+           
         && sudo chown www-data:www-data $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R
         && sudo ln -s $DEPLOYMENT_PATH/images/ $DEPLOYMENT_PATH/live/public/images
+        && sudo rm -f $DEPLOYMENT_PATH/live && sudo ln -s $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER} $DEPLOYMENT_PATH/live
         && sudo service nginx restart
         "

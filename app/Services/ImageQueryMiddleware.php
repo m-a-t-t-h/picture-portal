@@ -58,6 +58,8 @@ trait ImageQueryMiddleware
         }
         $filter_references = substr($filter_references, 0, -5) . ")";
 
+        $image_url_prefix = config("dkw.IMAGE_URL_PREFIX");
+
         $sql           = /**@lang MariaDB */
             <<<SQL
 
@@ -92,7 +94,7 @@ WITH $filter_definitions
                         II.height        AS  img_height,
                         II.format        AS  img_format,
                         IM.filesize      AS  img_size,
-                        concat('/images', relativePath, '/', IM.name) AS img_path,
+                        concat('$image_url_prefix', relativePath, '/', IM.name) AS img_path,
                         tag_chain,
                         IMD.make as camera_make,
                         IMD.model as camera_model,
@@ -122,6 +124,8 @@ order by $orderByStr
 LIMIT $page, $page_size
 SQL;
         $this->raw_sql = $sql;
+
+        \Log::debug($sql);
 
         return $this;
     }

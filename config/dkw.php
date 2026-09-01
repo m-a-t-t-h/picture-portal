@@ -26,9 +26,14 @@ return [
     //
     "INFINITE_SCROLL_SENTINEL_OFFSET" => env("DKW_INFINITE_SCROLL_SENTINEL_OFFSET"),
 
-    "PAGE_SIZE" => env("DKW_INFINITE_SCROLL_PAGE_SIZE"),
+    "PAGE_SIZE"          => env("DKW_INFINITE_SCROLL_PAGE_SIZE"),
 
     // ---- The DigiKam tag that corresponds to the "OnThisDay" label
     //
-    "ON_THIS_DAY_TAG_ID" => env("DKW_ON_THIS_DAY_TAG_ID")
+    "ON_THIS_DAY_TAG_ID" => env("DKW_ON_THIS_DAY_TAG_ID"),
+
+    // ---- If the mountpoint requires a subdirectory to the image source,
+    //      specify it here
+    //
+    "IMAGE_URL_PREFIX"   => env("DKW_IMAGE_URL_PREFIX"),
 ];
