@@ -94,9 +94,7 @@ steps:
 
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-           sudo chown www-data:www-data $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R
-        && sudo ln -s $IMAGE_MOUNTPOINT $DEPLOYMENT_PATH/live/public/images
-        && sudo rm -f $DEPLOYMENT_PATH/live && sudo ln -s $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER} $DEPLOYMENT_PATH/live
-        && sudo service nginx restart
-        "
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo chown www-data:www-data $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $IMAGE_MOUNTPOINT $DEPLOYMENT_PATH/live/public/images"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo rm -f $DEPLOYMENT_PATH/live && sudo ln -s $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER} $DEPLOYMENT_PATH/live"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo service nginx restart"
