@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 
-const key = "state-0.2";
+const key = "state-0.3";
 
 export const useStateStore = defineStore(key, {
 

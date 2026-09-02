@@ -35,7 +35,9 @@ async function loadMore() {
                     currentData = [data[0]];
                     start       = 1;
                 }
-                for (var i = start; i < data.length; i++) currentData.push(data[i]);
+                for (var i = start; i < data.length; i++) {
+                    currentData.push(data[i]);
+                }
                 resultsList.value = currentData;
                 state.setResults(resultsList);
 
