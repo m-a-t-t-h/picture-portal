@@ -36,4 +36,9 @@ return [
     //      specify it here
     //
     "IMAGE_URL_PREFIX"   => env("DKW_IMAGE_URL_PREFIX"),
+
+    // ---- If the mountpoint requires a leading part of the image path to  be removed,
+    //      specify it here
+    //
+    "IMAGE_URL_PREFIX_STRIP"=>env("DKW_IMAGE_URL_PREFIX_STRIP"),
 ];

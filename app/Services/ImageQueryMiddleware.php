@@ -58,7 +58,8 @@ trait ImageQueryMiddleware
         }
         $filter_references = substr($filter_references, 0, -5) . ")";
 
-        $image_url_prefix = config("dkw.IMAGE_URL_PREFIX");
+        $image_url_prefix       = config("dkw.IMAGE_URL_PREFIX");
+        $image_url_prefix_strip = config("dkw.IMAGE_URL_PREFIX_STRIP");
 
         $sql           = /**@lang MariaDB */
             <<<SQL
@@ -94,7 +95,7 @@ WITH $filter_definitions
                         II.height        AS  img_height,
                         II.format        AS  img_format,
                         IM.filesize      AS  img_size,
-                        concat('$image_url_prefix', relativePath, '/', IM.name) AS img_path,
+                        regexp_replace(concat('$image_url_prefix', relativePath, '/', IM.name), '$image_url_prefix_strip', '') AS img_path,
                         tag_chain,
                         IMD.make as camera_make,
                         IMD.model as camera_model,
