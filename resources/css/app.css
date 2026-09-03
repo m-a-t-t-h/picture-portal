@@ -215,9 +215,10 @@
 
     .buttons {
         @apply w-full flex flex-row justify-between ;
-        @apply text-slate-500 ;
-
-
+        @apply text-slate-500 bg-red-500;
+        .btn {
+            @apply min-w-fit px-3;
+        }
     }
 }
 
@@ -303,6 +304,7 @@
         @apply fixed inset-x-0 top-0 h-12 p-1 px-1;
         @apply bg-slate-700 text-slate-300;
         @apply flex flex-row justify-between items-center;
+        z-index: 100;
 
         h1 {
             @apply text-lg;
