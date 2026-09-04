@@ -30,34 +30,59 @@ return [
 
     'disks' => [
 
+
+        'images_source' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/images'),
+        ],
+
+        'glide_cache' => [
+            'driver'                  => 's3',
+            'endpoint'                => env('AWS_ENDPOINT'),
+            'url'                     => env('AWS_URL'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', FALSE),
+            'use_ssl'                 => env('AWS_USE_SSL', FALSE),
+            'version'                 => env('MINIO_VERSION', 'latest'),
+            'key'                     => env('AWS_ACCESS_KEY_ID'),
+            'secret'                  => env('AWS_SECRET_ACCESS_KEY'),
+            'region'                  => env('AWS_DEFAULT_REGION'),
+            'bucket'                  => env('AWS_BUCKET'),
+            'throw'                   => FALSE,
+            'root'                    => 'dkw',
+            'http' => [
+                'verify' => false,
+            ],
+
+        ],
+
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
-            'serve' => true,
-            'throw' => false,
-            'report' => false,
+            'root'   => storage_path('app/private'),
+            'serve'  => TRUE,
+            'throw'  => FALSE,
+            'report' => FALSE,
         ],
 
         'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            'driver'     => 'local',
+            'root'       => storage_path('app/public'),
+            'url'        => rtrim(env('APP_URL', 'http://localhost'), '/') . '/storage',
             'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
+            'throw'      => FALSE,
+            'report'     => FALSE,
         ],
 
         's3' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-            'throw' => false,
-            'report' => false,
+            'driver'                  => 's3',
+            'key'                     => env('AWS_ACCESS_KEY_ID'),
+            'secret'                  => env('AWS_SECRET_ACCESS_KEY'),
+            'region'                  => env('AWS_DEFAULT_REGION'),
+            'bucket'                  => env('AWS_BUCKET'),
+            'url'                     => env('AWS_URL'),
+            'endpoint'                => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', FALSE),
+            'throw'                   => FALSE,
+            'report'                  => FALSE,
         ],
 
     ],

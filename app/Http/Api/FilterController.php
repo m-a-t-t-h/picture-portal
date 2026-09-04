@@ -5,7 +5,7 @@ use App\Services\AuthService;
 use App\Services\ImageQueryMiddleware;
 use Log;
 
-class ApiFilterController extends Controller
+class FilterController extends Controller
 {
     use ImageQueryMiddleware;
 

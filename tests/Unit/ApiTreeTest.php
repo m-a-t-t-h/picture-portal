@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Http\Api\ApiFilterController;
-use App\Http\Api\ApiTreeController;
+use App\Http\Api\FilterController;
+use App\Http\Api\TreeController;
 use App\Models\Albums;
 use App\Models\Images;
 use App\Models\Tags;

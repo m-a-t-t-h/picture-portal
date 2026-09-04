@@ -37,7 +37,7 @@ async function loadImage() {
     <div v-if="loaded" class="image_info overflow-hidden">
 
         <div class="image_row">
-            <img class="" :id="`img_${photo.img_id}`" style="transition: transform-all 0.5s ease" :src="photo.img_path" loading="lazy" decoding="async" :alt="photo.img_path"/>
+            <img class="" :id="`img_${photo.img_id}`" :src="'/imgsrv/full/' + photo.img_hash" loading="lazy" decoding="async" :alt="photo.img_hash"/>
         <div class="info_row">
 
             <div class="lhs">

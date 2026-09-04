@@ -86,6 +86,7 @@ WITH $filter_definitions
      --  The final query
      --
      query4 as (select  IM.id            AS  img_id,
+                        SHA2(concat(relativePath, '/', IM.name), 256) AS img_hash,
                         IM.name          AS  img_name,
                         II.rating        AS  img_rating,
                         II.creationDate  AS  img_creation_date,
@@ -95,14 +96,14 @@ WITH $filter_definitions
                         II.height        AS  img_height,
                         II.format        AS  img_format,
                         IM.filesize      AS  img_size,
-                        regexp_replace(concat('$image_url_prefix', relativePath, '/', IM.name), '$image_url_prefix_strip', '') AS img_path,
+                        -- regexp_replace(concat('$image_url_prefix', relativePath, '/', IM.name), '$image_url_prefix_strip', '') AS img_path,
                         tag_chain,
                         IMD.make as camera_make,
                         IMD.model as camera_model,
                         IMD.lens as camera_lens,
                         IMD.aperture as camera_aperture,
-    IMD.focalLength as camera_focalLength,
-    IMD.sensitivity AS camera_iso
+                        IMD.focalLength as camera_focalLength,
+                        IMD.sensitivity AS camera_iso
 
                 from query3
                          LEFT JOIN ImageTags IT ON IT.tagid = tag_id
@@ -118,7 +119,7 @@ WITH $filter_definitions
                 $enforce_public
     )
 
-select * 
+select *
 from query4
 group by img_id
 order by $orderByStr
