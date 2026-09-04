@@ -7,7 +7,6 @@ const emits = defineEmits(["open-main-menu"]);
 defineProps({
     isMainMenuOpen: Boolean,
 });
-
 </script>
 
 <template>
