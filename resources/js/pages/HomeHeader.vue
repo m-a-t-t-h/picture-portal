@@ -16,7 +16,6 @@ defineProps({
             <img :aria-expanded="isMainMenuOpen" aria-label="Open main menu" src="/svg/menu.svg">
         </button>
         <h1>Home</h1>
-
     </div>
 
     <div class="rhs">
