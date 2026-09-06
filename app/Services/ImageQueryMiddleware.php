@@ -2,12 +2,13 @@
 
 namespace App\Services;
 
-use DB;
-use Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait ImageQueryMiddleware
 {
-    protected int $page;
+    protected int   $page;
+    protected array $excluded_tags;
 
     protected function newQuery(): self
     {
@@ -17,7 +18,9 @@ trait ImageQueryMiddleware
         return $this;
     }
 
-    protected function prepareQuery(): self
+
+
+    public function prepareRawQuery(): self
     {
         Log::debug(__METHOD__);
 
@@ -44,13 +47,6 @@ trait ImageQueryMiddleware
             "6" => "img_digitization_date DESC",
             "7" => "rand()"
         };
-
-        switch ($this->order_by) {
-            case 1: // id-asc
-                $orderByStr = "img_id";
-                break;
-
-        }
 
         foreach ($tag_filters as $idx => $filter_tag_id) {
             $filter_definitions .= "\n    filter$filter_tag_id as (select IM.id from Images IM LEFT JOIN ImageTags IT on IM.id = IT.imageid where tagid = $filter_tag_id),";
@@ -132,9 +128,9 @@ SQL;
         return $this;
     }
 
-    protected function runQuery()
+    public function runQuery()
     {
-        $this->raw_query_results = DB::select($this->raw_sql);
+        $this->raw_query_results = \DB::select($this->raw_sql);
         Log::debug(count($this->raw_query_results) . " raw results");
 
         return $this;
@@ -153,31 +149,11 @@ SQL;
         return $this;
     }
 
-    protected function setTagFilter(array $tags): self
-    {
-        Log::debug("--------------");
-        Log::debug("");
-        Log::debug("");
-        Log::debug("Tag filters: [" . implode(",", $tags) . "]");
 
-        $this->tag_filters = $tags;
 
-        return $this;
-    }
 
-    public function setOrderBy($value): self
-    {
-        $this->order_by = $value;
 
-        return $this;
-    }
 
-    public function setPage(int $page_id): self
-    {
-        $this->page = $page_id;
-
-        return $this;
-    }
 
     protected function debugLogQuery($do_it = TRUE): self
     {
@@ -193,7 +169,7 @@ SQL;
         return $this;
     }
 
-    protected function getResults(): array
+    public function getResults(): array
     {
         return $this->raw_query_results;
     }
@@ -201,5 +177,11 @@ SQL;
     protected function getJsonResults(): string
     {
         return json_encode($this->getResults());
+    }
+
+    protected function setExcludedTags(array $excluded): self
+    {
+        $this->excluded_tags = $excluded;
+        return $this;
     }
 }

@@ -160,6 +160,8 @@
                     @apply  md:min-h-100 md:max-h-100;
                     @apply object-cover w-full object-top;
 
+                    box-shadow: 0 0 5px #444;
+
                     @apply  hover:shadow-black;
                     @apply hover:shadow-2xl;
                     @apply hover:cursor-pointer;
