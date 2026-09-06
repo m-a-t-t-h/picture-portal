@@ -5,31 +5,41 @@ use App\Services\ImgSrv;
 
 class ImgSrvController extends Controller
 {
-    public function getThumbnail($hash)
-    {
-        try {
-            $path   = ImgSrv::hashToPath($hash);
-            $server = app('glide.server');
-
-            return $server->getImageResponse($path, ["h" => 400]);
-        }
-        catch (\Exception $e) {
-            \Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
-            // @todo Return a placeholder image
-        }
-    }
-
     /**
+     * Get thumbnail of image by its hash
+     *
      * @param $hash string
      *
      * @return string
      *
      * @todo Return placeholder image when not found
      */
-    public function getImage(string $hash): string
+
+    public function getThumbnail($hash)
     {
         try {
-            $response = app('glide.server')->getImageResponse(ImgSrv::hashToPath($hash), ["w" => 280]);
+            $response = app('glide.server')->getImageResponse(ImgSrv::hashToPath($hash), ["h" => 400]);
+
+            return $response;
+        }
+        catch (\Exception $e) {
+            \Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+        }
+    }
+
+    /**
+     * Get full sized image by hash
+     *
+     * @param $hash string
+     *
+     * @return string
+     *
+     * @todo Return placeholder image when not found
+     */
+    public function getImage(string $hash)
+    {
+        try {
+            $response = app('glide.server')->getImageResponse(ImgSrv::hashToPath($hash), ["w" => 1280]);
 
             return $response;
         }

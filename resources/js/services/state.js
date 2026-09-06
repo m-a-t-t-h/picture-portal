@@ -14,6 +14,10 @@ export const useStateStore = defineStore(key, {
 
     state: () => ({
         tree: [],
+        page: {
+            has_header: true,
+            has_footer: true,
+        },
         prefs: {
             results: [],
             tag_filter: "",

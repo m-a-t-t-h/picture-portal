@@ -3,21 +3,23 @@ import {useRoute} from "vue-router";
 import {useStateStore} from "../services/state.js";
 import {onMounted, reactive, ref} from "vue";
 
-const state  = useStateStore();
-const route  = useRoute();
+const state = useStateStore();
+const route = useRoute();
 const img_id = route.params.img_id;
-let photo    = reactive(state.getSelectedPhoto);
-let info     = reactive({});
-let loaded   = ref(false);
+let photo = reactive(state.getSelectedPhoto);
+let info = reactive({});
+let loaded = ref(false);
+
+state.page.has_footer = false;
+state.page.has_header = false;
 
 onMounted(async () => {
     await loadImage();
 });
 
 async function loadImage() {
-    console.log("Loading image info");
     const token = document.querySelector('meta[name="csrf-token"]').content;
-    const ret   = await fetch("/dw/image/" + img_id + "/info",
+    const ret = await fetch("/dw/image/" + img_id + "/info",
         {method: "POST", headers: {"Content-Type": "application/json", "X-CSRF-TOKEN": token}})
         .then(response => response.json()).then(data => {
             console.log("Loaded image info");
@@ -26,8 +28,7 @@ async function loadImage() {
         });
 
     loaded.value = true;
-    info         = ret;
-    return ret;
+    info = ret;
 }
 
 </script>
@@ -37,7 +38,8 @@ async function loadImage() {
     <div v-if="loaded" class="image_info overflow-hidden">
 
         <div class="image_row">
-            <img class="" :id="`img_${photo.img_id}`" :src="'/dw/imgsrv/full/' + photo.img_hash" loading="lazy" decoding="async" :alt="photo.img_hash"/>
+            <img :src="'/dw/imgsrv/full/' + photo.img_hash" :id="`img_${photo.img_id}`" loading="lazy" decoding="async" :alt="photo.name" class="max-h-fit object-contain"/>
+        </div>
         <div class="info_row">
 
             <div class="lhs">
@@ -85,9 +87,6 @@ async function loadImage() {
 
             </div>
         </div>
-
-        </div>
-
     </div>
 
 </template>

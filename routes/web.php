@@ -18,7 +18,7 @@ Route::redirect("/", "/dw");
 Route::get('/dw', [AppController::class, "get"]);
 Route::get("/dw/tree", [TreeController::class, "get"]);
 Route::get('/dw/imgsrv/thumb/{hash}', [ImgSrvController::class, "getThumbnail"])->where('hash', '.*');
-Route::get('/dw/imgsrv/full/{hash}', [ImgSrvController::class, "getImage"])->where('hash', '.*');
+Route::get('/dw/imgsrv/full/{hash}',  [ImgSrvController::class, "getImage"])    ->where('hash', '.*');
 Route::get('/dw/auth/authed', [AuthController::class, 'isAuthed']);
 Route::get('/dw/{any?}', [AppController::class, "get"])->where('any', '.*');
 

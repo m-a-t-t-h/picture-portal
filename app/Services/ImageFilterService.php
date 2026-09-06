@@ -81,22 +81,18 @@ class ImageFilterService
             'imageTags',
         ];
 
-        $query = Images::query();
-        $query = $this->applyCollectionConstraint($query);
+        $query = $this->applyCollectionConstraint(Images::query());
         $query = $this->applyPublicTagConstraint($query);
         $query = $this->applySelectedTagsConstraint($query);
         $query = $this->applyCameraConstraint($query);
         $query = $this->applyImageFormatConstraint($query);
         $query = $this->applyOrdering($query);
-        //$query = $this->joinTagChain($query);
 
-        $query->with($relations)
+        $this->query = $query->with($relations)
             ->addSelect(["img_hash" => Images::selectRaw("SHA2( CONCAT(Images.id, '/', Images.name) , 256) AS img_hash")->from("Images", "I2")->whereColumn("I2.id", "Images.id")])
             ->where("status", Images::STATUS_NORMAL)
             ->offset($this->page * $this->page_size)
             ->limit($this->page_size);
-
-        $this->query = $query;
 
         return $this;
     }

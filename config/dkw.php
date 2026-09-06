@@ -12,7 +12,7 @@ return [
     // ---- Whether to require images to be served to have the "Public" tag,
     //      otherwise an image will be considered private
     //
-    "REQUIRE_PUBLIC_TAG"              => env("DKW_REQUIRE_PUBLIC_TAG"),
+    "REQUIRE_PUBLIC_TAG"              => env("DKW_REQUIRE_PUBLIC_TAG", false),
 
     // ---- The ID value of the "Public" tag
     //

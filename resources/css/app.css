@@ -311,7 +311,7 @@
 
         img {
             @apply mx-auto;
-            @apply max-h-full;
+            @apply max-h-screen;
             @apply object-center;
         }
     }
