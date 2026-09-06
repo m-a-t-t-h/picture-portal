@@ -18,7 +18,7 @@ async function loadMore() {
     let orderBy = state.prefs.orderBy;
     let currentData = structuredClone(toRaw(resultsList.value));
 
-    fetch("/results", {
+    fetch("/dw/results", {
       method: "POST",
       headers: {"Content-Type": "application/json", "X-CSRF-TOKEN": token},
       body: JSON.stringify({
@@ -137,7 +137,7 @@ const imgClicked = function (photo) {
           </div>
 
           <div class="img-container" v-else-if="photo.img_format==='JPG' || photo.img_format==='GIF' || photo.img_format==='PNG' || photo.img_format==='WEBP' || photo.img_format==='AVIF'" @click="imgClicked(photo)">
-              <img :src="'/imgsrv/thumb/' + photo.img_hash" :id="`img_${photo.img_id}`" class="format_img" loading="lazy" decoding="async" :alt="photo.img_path">
+              <img :src="'/dw/imgsrv/thumb/' + photo.img_hash" :id="`img_${photo.img_id}`" class="format_img" loading="lazy" decoding="async" :alt="photo.img_path">
               <div v-if="state.prefs.showCameraInfo" class=" rounded-lg  relative inset-0 -mt-10 h-10  text-slate-700 w-full z-20 text-xs ">
                 <div class="flex flex-col bg-slate-200/80 p-1 px-2">
                   <div>{{ photo.camera_model }}</div>

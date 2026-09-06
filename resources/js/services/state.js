@@ -34,7 +34,7 @@ export const useStateStore = defineStore(key, {
         showFilename: (state) => state.prefs.showFilename,
         getTree: async (state) => {
             const token = document.querySelector('meta[name="csrf-token"]').content;
-            await fetch("/tree", {
+            await fetch("/dw/tree", {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": token
             })

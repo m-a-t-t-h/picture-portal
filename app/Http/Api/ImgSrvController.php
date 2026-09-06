@@ -8,33 +8,45 @@ class ImgSrvController extends Controller
     public function getThumbnail($hash)
     {
         try {
-            $server = app('glide.server');
             $path   = ImgSrv::hashToPath($hash);
+            $server = app('glide.server');
 
             return $server->getImageResponse($path, ["h" => 400]);
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+        }
+        catch (\Exception $e) {
+            \Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
             // @todo Return a placeholder image
         }
     }
 
-    public function getImage($hash)
+    /**
+     * @param $hash string
+     *
+     * @return string
+     *
+     * @todo Return placeholder image when not found
+     */
+    public function getImage(string $hash): string
     {
         try {
-            $server = app('glide.server');
-            $path   = ImgSrv::hashToPath($hash);
+            $response = app('glide.server')->getImageResponse(ImgSrv::hashToPath($hash), ["w" => 280]);
 
-            return $server->getImageResponse($path, ["w" => 1280]);
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
-            // @todo Return a placeholder image
+            return $response;
+        }
+        catch (\Exception $e) {
+            \Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
         }
     }
 
+    /**
+     * @param $img_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @todo Eloquentify this query, in a service method
+     */
     public function info($img_id)
     {
-        \Log::debug("Getting image info for $img_id");
-
         $sql = <<<SQL
 
 SELECT * FROM Images
@@ -46,7 +58,6 @@ WHERE Images.id=?
 SQL;
 
         $rst = \DB::select($sql, [$img_id]);
-        \Log::debug($rst);
 
         return response()->json($rst);
     }

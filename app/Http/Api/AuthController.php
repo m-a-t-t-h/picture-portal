@@ -12,4 +12,11 @@ class AuthController extends Controller
             'user' => $request->user(),
         ]);
     }
+
+    public function isAuthed(Request $request): JsonResponse
+    {
+        return response()->json([
+            "authed" => $request->user() ?? FALSE,
+        ]);
+    }
 }

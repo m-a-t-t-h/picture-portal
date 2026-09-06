@@ -9,6 +9,11 @@ class Images extends Model
 {
     public $table = "Images";
 
+    public const STATUS_NORMAL = 1;
+    public const STATUS_2      = 2;
+    public const STATUS_3      = 3;
+    public const STATUS_4      = 4;
+
     public function imageTags(): HasManyThrough
     {
         return $this->hasManyThrough(

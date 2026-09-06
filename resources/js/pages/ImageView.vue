@@ -17,7 +17,7 @@ onMounted(async () => {
 async function loadImage() {
     console.log("Loading image info");
     const token = document.querySelector('meta[name="csrf-token"]').content;
-    const ret   = await fetch("/api/image/" + img_id + "/info",
+    const ret   = await fetch("/dw/image/" + img_id + "/info",
         {method: "POST", headers: {"Content-Type": "application/json", "X-CSRF-TOKEN": token}})
         .then(response => response.json()).then(data => {
             console.log("Loaded image info");
@@ -37,7 +37,7 @@ async function loadImage() {
     <div v-if="loaded" class="image_info overflow-hidden">
 
         <div class="image_row">
-            <img class="" :id="`img_${photo.img_id}`" :src="'/imgsrv/full/' + photo.img_hash" loading="lazy" decoding="async" :alt="photo.img_hash"/>
+            <img class="" :id="`img_${photo.img_id}`" :src="'/dw/imgsrv/full/' + photo.img_hash" loading="lazy" decoding="async" :alt="photo.img_hash"/>
         <div class="info_row">
 
             <div class="lhs">

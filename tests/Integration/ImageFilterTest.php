@@ -17,8 +17,9 @@ class ImageFilterTest extends TestCase
         $service->setEnforcePublicTag(FALSE);
 
         $service->setTagFilter([3021]);
-        $results = $service->run()->getResults();
+        $results = $service->buildQuery()->runQuery()->getResults();
 
+        self::assertNotNull($results);
         self::assertCount(4, $results);
     }
 
@@ -28,8 +29,9 @@ class ImageFilterTest extends TestCase
         $service->setEnforcePublicTag(TRUE);
 
         $service->setTagFilter([3021]);
-        $results = $service->run()->getResults();
+        $results = $service->buildQuery()->runQuery()->getResults();
 
+        self::assertNotNull($results);
         self::assertCount(0, $results);
     }
 
@@ -39,8 +41,9 @@ class ImageFilterTest extends TestCase
         $service->setEnforcePublicTag(FALSE);
 
         $service->setTagFilter([3022]);
-        $results = $service->run()->getResults();
+        $results = $service->buildQuery()->runQuery()->getResults();
 
+        self::assertNotNull($results);
         self::assertCount(1, $results);
     }
 
@@ -50,8 +53,9 @@ class ImageFilterTest extends TestCase
         $service->setEnforcePublicTag(TRUE);
 
         $service->setTagFilter([3022]);
-        $results = $service->run()->getResults();
+        $results = $service->buildQuery()->runQuery()->getResults();
 
+        self::assertNotNull($results);
         self::assertCount(1, $results);
     }
 
@@ -61,8 +65,9 @@ class ImageFilterTest extends TestCase
         $service->setEnforcePublicTag(TRUE);
 
         $service->setTagFilter([2448, 2594]);
-        $results = $service->run()->getResults();
+        $results = $service->buildQuery()->runQuery()->getResults();
 
+        self::assertNotNull($results);
         self::assertCount(2, $results);
     }
 
@@ -72,8 +77,9 @@ class ImageFilterTest extends TestCase
         $service->setEnforcePublicTag(TRUE);
 
         $service->setCameraFilter(["HTC"]);
-        $results = $service->run()->getResults();
+        $results = $service->buildQuery()->runQuery()->getResults();
 
+        self::assertNotNull($results);
         self::assertCount(1, $results);
     }
 
@@ -83,8 +89,9 @@ class ImageFilterTest extends TestCase
         $service->setEnforcePublicTag(TRUE);
 
         $service->setCameraFilter(["HTC", "FUJIFILM"]);
-        $results = $service->run()->getResults();
+        $results = $service->buildQuery()->runQuery()->getResults();
 
+        self::assertNotNull($results);
         self::assertCount(35, $results);
     }
 
@@ -94,7 +101,8 @@ class ImageFilterTest extends TestCase
         $service->setEnforcePublicTag(false);
 
         $service->setTagFilter([2448, 2594]);
-        $results = $service->run()->getResults();
+        $results = $service->buildQuery()->runQuery()->getResults();
+        self::assertNotNull($results);
 
         self::assertEquals("Aircraft,Wales,Helicopter", $results[0]["tags"]);
         self::assertEquals("2419,2448,2594", $results[0]["tag_ids"]);

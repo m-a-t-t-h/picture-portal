@@ -17,13 +17,12 @@ class ImageFilterResultsTest extends TestCase
         $service->setEnforcePublicTag(FALSE);
 
         $service->setTagFilter([3021]);
-        $results = $service->run()->getResults();
+        $results = $service->buildQuery()->runQuery()->getResults();
 
+        self::assertNotNull($results);
         self::assertCount(4, $results);
 
         self::assertNotNull($results[0]["img_id"]);
         self::assertEquals("Cars,Qashqai", $results[0]["tags"]);
     }
-
-
 }

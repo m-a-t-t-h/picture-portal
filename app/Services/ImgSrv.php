@@ -21,18 +21,32 @@ class ImgSrv
         $sql = <<<SQL
 
   WITH
-      q1 AS (SELECT CONCAT(relativePath, '/', IM.name) AS img_path, IM.id AS img_id
-                FROM Images IM LEFT JOIN Albums ON Albums.id = IM.album
-               WHERE status = 1 AND Albums.albumRoot = $root_collection_id),
-      q2 AS (SELECT  img_id, SHA2(img_path, 256) AS img_hash FROM q1),
-      q3 AS (SELECT  img_hash, regexp_replace(concat('$image_url_prefix', relativePath, '/', IM.name), '$image_url_prefix_strip', '') AS img_path
-                FROM q2 LEFT JOIN Images IM ON IM.id = img_id LEFT JOIN Albums AL ON AL.id = IM.album)
-  SELECT img_path FROM q3 WHERE img_hash = ?
+      q1 AS (
+                SELECT CONCAT(relativePath, '/', IM.name) AS img_path, 
+                       IM.name as img_name,
+                       IM.id AS img_id
+                    FROM Images IM 
+                    LEFT JOIN Albums ON Albums.id = IM.album
+                    WHERE status = 1 
+                      AND Albums.albumRoot = $root_collection_id
+                    ),
+      
+      q2 AS (
+                SELECT  img_id, 
+                        img_name, 
+                        img_path, 
+                        SHA2(CONCAT(img_id, '/', img_name), 256) AS img_hash 
+                FROM q1
+                )
+  SELECT * FROM q2 WHERE img_hash=?
 SQL;
 
         $rst = \DB::select($sql, [$hash]);
-        if ($rst) $path = $rst[0]->img_path;
 
+
+        if ($rst) {
+            $path = $rst[0]->img_path;
+        }
         return $path;
     }
 }
