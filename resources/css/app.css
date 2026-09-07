@@ -157,13 +157,13 @@
                     @apply rounded;
                     @apply transition-all duration-200;
                     @apply mx-auto;
-                    @apply  md:min-h-100 md:max-h-100;
+                    @apply md:min-h-100 md:max-h-100;
                     @apply object-cover w-full object-top;
 
+                    border:     3px solid transparent;
                     box-shadow: 0 0 5px #444;
 
-                    @apply  hover:shadow-black;
-                    @apply hover:shadow-2xl;
+                    @apply hover:border-blue-500;
                     @apply hover:cursor-pointer;
                 }
             }
@@ -266,11 +266,10 @@
     }
 }
 
-
 .layout {
     @apply flex flex-col;
     @apply min-h-screen;
-    @apply bg-white;
+    @apply bg-slate-200;
 
 
     .header-wrapper {
@@ -288,8 +287,6 @@
         @apply fixed inset-x-0 bottom-0 z-50 h-12 p-1 px-1;
         @apply bg-slate-700 text-slate-300;
         @apply flex flex-row justify-between items-center;
-
-
     }
 
     .main-content-wrapper {
@@ -298,37 +295,39 @@
         .main-content {
         }
     }
-
-
 }
 
 .image_info {
     @apply flex flex-col  p-0 bg-slate-200 -mt-12;
 
     .image_row {
-        @apply max-w-full min-w-full  mx-auto h-full;
+        @apply mx-auto  flex flex-col;
 
         img {
+            @apply min-w-full h-full max-h-screen mx-auto;
             @apply mx-auto;
-            @apply max-h-screen;
             @apply object-center;
+            @apply mb-3;
         }
     }
 
     .info_row {
-        @apply flex flex-row w-full text-xs  mx-auto gap-12;
+        @apply items-start text-xs;
+        @apply flex flex-col w-full mx-auto;
+        @apply min-h-screen justify-between;
 
-        .lhs {
-            @apply flex-1 flex flex-col text-right;
+        .lhs, .rhs {
+            @apply flex-1 p-1;
+            @apply flex flex-col;
+            @apply min-w-full;
         }
-
         .rhs {
-            @apply flex-1 flex flex-col;
+            @apply md:flex-1;
         }
 
         .field {
-            @apply flex flex-row;
-            @apply h-8 items-center;
+            @apply flex md:flex-row flex-col;
+            @apply p-2 md:items-center items-start ;
 
             .label {
                 @apply flex-1;
@@ -336,8 +335,9 @@
             }
 
             .value {
-                @apply flex-2;
+                @apply flex-2 w-full;
                 @apply text-green-900;
+                @apply bg-slate-300 p-1;
             }
         }
     }
@@ -347,6 +347,7 @@
 .btn-row {
     @apply w-full flex flex-row items-center mx-3 ;
 }
+
 .panel-footer.btn-row {
     @apply w-full flex flex-row items-center justify-between ;
 }

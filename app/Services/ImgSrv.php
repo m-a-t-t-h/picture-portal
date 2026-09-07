@@ -37,10 +37,6 @@ SQL;
 
         $rst = DB::select($sql, [$hash]);
 
-        if ($rst) {
-            $path = $rst[0]->img_path;
-        }
-
-        return $path;
+        return $rst ? $rst[0]->img_path : "";
     }
 }

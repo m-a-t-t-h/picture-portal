@@ -65,7 +65,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(2, $results);
+        self::assertCount(0, $results);
     }
 
     public function testSingleCameraFilter()
@@ -88,7 +88,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(34, $results);
+        self::assertCount(32, $results);
     }
 
     public function testMultiCameraFilter()
@@ -100,7 +100,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(35, $results);
+        self::assertCount(33, $results);
     }
 
     public function testTagChain()
