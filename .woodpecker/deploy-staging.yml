@@ -2,6 +2,9 @@ when:
   - event: push
     evaluate: '(CI_COMMIT_MESSAGE contains "[#staging]")'
 
+  - event: push
+    branch: main
+
 steps:
 
   - name: setup_environment
