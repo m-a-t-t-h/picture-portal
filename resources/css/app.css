@@ -266,11 +266,10 @@
     }
 }
 
-
 .layout {
     @apply flex flex-col;
     @apply min-h-screen;
-    @apply bg-white;
+    @apply bg-slate-200;
 
 
     .header-wrapper {
@@ -301,6 +300,7 @@
 
 
 }
+
 
 .image_info {
     @apply flex flex-col  p-0 bg-slate-200 -mt-12;
