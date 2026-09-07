@@ -3,6 +3,7 @@
 use App\Models\Images;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ImageFilterService
 {
