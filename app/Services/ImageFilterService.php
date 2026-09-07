@@ -257,7 +257,7 @@ class ImageFilterService
         $query
             ->leftJoin("ImageTags", "ImageTags.imageid", "=", "Images.id")
             ->leftJoin('tag_chain', "ImageTags.tagid", "=", "tag_id")
-            ->select(\DB::raw("*,GROUP_CONCAT(tag_chain.tag_path ORDER BY tag_id SEPARATOR '|') AS tag_path,
+            ->select(DB::raw("*,GROUP_CONCAT(tag_chain.tag_path ORDER BY tag_id SEPARATOR '|') AS tag_path,
                                  GROUP_CONCAT(tag_chain.tag_chain ORDER BY tag_id SEPARATOR '|') AS tag_chain"))
             ->whereNotLike("tag_chain", ",1,%");
 

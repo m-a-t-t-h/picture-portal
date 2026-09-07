@@ -1,6 +1,6 @@
-<?php
+<?php namespace App\Services;
 
-namespace App\Services;
+use Illuminate\Support\Facades\DB;
 
 class ImgSrv
 {
@@ -35,11 +35,12 @@ SELECT img_path FROM q2 WHERE img_hash=?
 
 SQL;
 
-        $rst = \DB::select($sql, [$hash]);
+        $rst = DB::select($sql, [$hash]);
 
         if ($rst) {
             $path = $rst[0]->img_path;
         }
+
         return $path;
     }
 }
