@@ -24,6 +24,6 @@ class ImageFilterResultsTest extends TestCase
         self::assertCount(4, $results);
 
         self::assertNotNull($results[0]["img_id"]);
-        self::assertEquals("Cars,Qashqai", $results[0]["tags"]);
+        self::assertEquals("Cars,Qashqai", implode(",", array_column($results[0]["tags"], 1)));
     }
 }

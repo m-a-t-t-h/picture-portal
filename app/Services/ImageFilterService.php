@@ -82,6 +82,7 @@ class ImageFilterService
             'imagePosition',
             'imageMetadata',
             'imageTags',
+            "tagChain",
         ];
 
         $query = $this->applyCollectionConstraint(Images::query());
@@ -106,44 +107,33 @@ class ImageFilterService
         $images = $query->get();
 
         $mapped = $images->map(function (Images $image) {
+            $excluded_tags = ["1", "2829", "4"];
+
             $tag_parts = NULL;
             $tag_ids   = NULL;
 
             $information = $image->imageInformation;
             $metadata    = $image->imageMetadata;
+            $filtered_tags = [];
 
-            if (isset($image["tag_path"])) {
-                $excluded_tags = ["1", "2829"];
-
-                $tag_path  = explode("|", $image["tag_path"]);
-                $tag_chain = explode("|", $image["tag_chain"]);
-
-                $filtered_path  = [];
-                $filtered_chain = [];
-                for ($i = 0; $i < count($tag_chain); $i++) {
-
-                    // ---- Split the tag_chain by comma, iterate it and reject any tag IDs in the $excluded_tags array
-                    //
-                    $chain = explode(",", $tag_chain[$i]);
-                    $skip  = FALSE;
-                    foreach ($chain as $c) foreach ($excluded_tags as $e) $skip = $skip || $e === $c;
+            $tags = $image->tagChain->toArray();
+            if (count($tags)) {
+                foreach ($tags as $tag) {
+                    $tag_id   = $tag["tag_id"];
+                    $tag_name = $tag["tag_name"];
+                    $skip     = FALSE;
+                    foreach ($excluded_tags as $excluded_tag) {
+                        if (str_contains($tag["tag_chain"], "," . $excluded_tag . ",")) $skip = TRUE;
+                    }
                     if (!$skip) {
-                        $filtered_chain[] = $tag_chain[$i];
-                        $filtered_path[]  = $tag_path[$i];
+                        $filtered_tags[] = [$tag_id, $tag_name];
                     }
                 }
-
-                $tag_parts = implode(",", array_map(fn($x) => basename($x), $filtered_path));
-                $tag_ids   = implode(",", array_map(function ($x) {
-                    $parts = explode(',', $x);
-
-                    return $parts[count($parts) - 2];
-                }, $filtered_chain));
             }
 
             return [
+                "tags"                  => $filtered_tags,
                 "img_hash"              => $image->img_hash,
-                "tags"                  => $tag_parts,
                 "tag_ids"               => $tag_ids,
                 'img_id'                => $image->id,
                 'img_name'              => $image->name,

@@ -46,6 +46,17 @@ class Images extends Model
         return $this->hasOne(ImageMetadata::class, "imageid", "id");
     }
 
+    public function tagChain():HasManyThrough {
+        return $this->hasManyThrough(
+            TagChain::class,
+            ImageTags::class,
+            "imageid",
+            "tag_id",
+            "id",
+            "tagid"
+        );
+    }
+
     public function path(): Attribute
     {
         return Attribute::make(

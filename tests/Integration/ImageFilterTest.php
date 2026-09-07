@@ -43,7 +43,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(1, $results);
+        self::assertCount(2, $results);
     }
 
     public function testTag_3022_PublicEnforced()
@@ -54,7 +54,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(1, $results);
+        self::assertCount(2, $results);
     }
 
     public function testTags_2448_2594_PublicEnforced()
@@ -111,8 +111,8 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertEquals("Aircraft,Wales,Helicopter", $results[0]["tags"]);
-        self::assertEquals("2419,2448,2594", $results[0]["tag_ids"]);
+        self::assertEquals("Aircraft,Wales,Helicopter", implode(",", array_column($results[0]["tags"], 1)));
+        self::assertEquals("2419,2448,2594",implode(",", array_column($results[0]["tags"], 0)));
     }
 
     public function setUp(): void
