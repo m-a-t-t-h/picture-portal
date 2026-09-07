@@ -13,10 +13,11 @@ class ImageFilterResultsTest extends TestCase
 {
     public function testTag_3021_PublicNotEnforced()
     {
-        $service = new ImageFilterService();
-        $service->setEnforcePublicTag(FALSE);
+        $service = (new ImageFilterService())
+            ->setEnforcePublicTag(FALSE)
+            ->setCollectionId(5)
+            ->setTagFilter([3021]);
 
-        $service->setTagFilter([3021]);
         $results = $service->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);

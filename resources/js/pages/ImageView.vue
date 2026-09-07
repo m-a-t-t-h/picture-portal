@@ -14,6 +14,9 @@ state.page.has_footer = false;
 state.page.has_header = false;
 
 onMounted(async () => {
+    state.page.has_footer = false;
+    state.page.has_header = false;
+
     await loadImage();
 });
 

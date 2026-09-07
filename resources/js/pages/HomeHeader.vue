@@ -2,12 +2,10 @@
 import {useStateStore} from "../services/state.js";
 import {useAuth} from "../services/useAuth.js";
 
-const state = useStateStore();
 const user  = useAuth();
 const emits = defineEmits(["open-main-menu"]);
 
-state.page.has_header = true;
-state.page.has_footer = true;
+
 
 defineProps({
     isMainMenuOpen: Boolean,

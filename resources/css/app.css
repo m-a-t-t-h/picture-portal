@@ -303,11 +303,10 @@
 }
 
 .image_info {
-    @apply flex flex-col  p-0 bg-slate-700;
+    @apply flex flex-col  p-0 bg-slate-200 -mt-12;
 
     .image_row {
-        @apply max-w-full min-w-full  mx-auto p-1;
-        @apply absolute top-0 z-50;
+        @apply max-w-full min-w-full  mx-auto h-full;
 
         img {
             @apply mx-auto;
@@ -317,29 +316,28 @@
     }
 
     .info_row {
-        @apply grid grid-cols-2 w-full text-xs bg-slate-500 mx-auto;
+        @apply flex flex-row w-full text-xs  mx-auto gap-12;
 
         .lhs {
-            @apply flex flex-col w-100 text-right;
+            @apply flex-1 flex flex-col text-right;
         }
 
         .rhs {
-            @apply flex flex-col w-100;
+            @apply flex-1 flex flex-col;
         }
 
         .field {
             @apply flex flex-row;
-            @apply border p-1 m-1;
             @apply h-8 items-center;
 
             .label {
                 @apply flex-1;
-                @apply text-slate-200;
+                @apply text-slate-400;
             }
 
             .value {
                 @apply flex-2;
-                @apply text-green-500;
+                @apply text-green-900;
             }
         }
     }

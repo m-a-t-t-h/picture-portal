@@ -20,6 +20,8 @@ class ImageFilterService
     {
         $this->enforce_public_tag = config("dkw.REQUIRE_PUBLIC_TAG");
         $this->page_size          = config("dkw.PAGE_SIZE");
+        $this->page               = 0;
+        $this->order_by           = 7;
     }
 
     public function setEnforcePublicTag(bool $bool): self
@@ -223,18 +225,28 @@ class ImageFilterService
 
     protected function applyOrdering(Builder $query): Builder
     {
-        if ($this->order_by === "7") {
-            $query->inRandomOrder();
-        } else {
-            $order = match ($this->order_by) {
-                "1" => "Images.id ASC",
-                "2" => "Images.id DESC",
-                "3" => "Images.name ASC",
-                "4" => "Images.name DESC",
-                "5" => "",
-                "6" => "",
-            };
-            $query->orderBy($order);
+        if (!isset($this->order_by)) $this->order_by = 7;
+
+        switch ($this->order_by) {
+            case "1":
+                $query->orderBy("Images.id");
+                break;
+            case "2":
+                $query->orderByDesc("Images.id");
+                break;
+            case "3":
+                $query->orderBy("Images.name");
+                break;
+            case 4:
+                $query->orderByDesc("Images.name");
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                $query->inRandomOrder();
+                break;
         }
 
         return $query;
