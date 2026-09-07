@@ -24,21 +24,19 @@ const handleCheckedChange = (nodes) => {
     });
     state.setTagFilter(JSON.stringify(checked));
 };
-const clearFilter         = (event) => {
+const clearFilter         = () => {
     treeRef.value?.clearChecked();
     treeRef.value?.setExpandAll(false);
 };
-const collapseAll         = (event) => {
+const collapseAll         = () => {
     treeRef.value?.setExpandAll(false);
 };
-const selectedOnly        = (event) => {
+const selectedOnly        = () => {
     showSelectedOnly.value = !showSelectedOnly.value;
 
     if (showSelectedOnly.value) {
-        console.log("Showing selected only");
         treeRef.value.showCheckedNodes(true);
     } else {
-        console.log("Showing all nodes");
         treeRef.value.showCheckedNodes(false);
     }
 };
@@ -72,7 +70,7 @@ onMounted(async () => {
         }, 50);
     }
 });
-watch(orderBy, async (newval) => {
+watch(orderBy, async () => {
     state.setOrderBy(orderBy);
 });
 </script>
@@ -95,7 +93,7 @@ watch(orderBy, async (newval) => {
 
                     <div class="border-l-2 border-l-slate-200 ml-3">
                         <button class="btn ml-3 " @click="emits('filter-panel-toggle')">
-                            <img src="/svg/close.svg">
+                            <img src="/svg/close.svg" alt="Close panel">
                         </button>
                     </div>
                 </div>

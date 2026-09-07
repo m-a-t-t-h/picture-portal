@@ -25,8 +25,6 @@ async function loadImage() {
     const ret = await fetch("/dw/image/" + img_id + "/info",
         {method: "POST", headers: {"Content-Type": "application/json", "X-CSRF-TOKEN": token}})
         .then(response => response.json()).then(data => {
-            console.log("Loaded image info");
-            console.log(data[0]);
             return data[0];
         });
 

@@ -14,7 +14,6 @@ async function loadMore() {
     const token = document.querySelector('meta[name="csrf-token"]').content;
     const filter = state.prefs.tag_filter;
     if (filter) {
-        console.log("Loading filtered data", filter);
         let orderBy = state.prefs.orderBy;
         let currentData = structuredClone(toRaw(resultsList.value));
 
@@ -27,8 +26,6 @@ async function loadMore() {
                 page: page
             })
         }).then(response => response.json()).then(data => {
-            console.log("Loaded " + data.length + " rows for page " + page);
-
             if (data.length) {
                 let start = 0;
                 if (!currentData) {
@@ -62,7 +59,6 @@ function checkVisibility() {
 
 onMounted(() => {
     window.addEventListener("filter-updated", function () {
-        console.log("Filter updated");
         resultsList.value = [];
         page = 0;
         loadMore();
@@ -82,7 +78,6 @@ const imgClicked = function (photo) {
 
     let element = window.document.getElementById("img_" + photo.img_id);
     if (element) {
-        console.log("Zooming element");
         showShield.value = true;
         if (element.style.position !== "fixed") {
             element.style.position = "fixed";

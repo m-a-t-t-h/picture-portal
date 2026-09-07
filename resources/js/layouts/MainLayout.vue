@@ -12,13 +12,11 @@ const settingsPanelOpen = ref(false);
 const isMainMenuOpen = ref(false);
 
 function toggleFilterPanel() {
-    console.log("Toggle filter panel");
     filterPanelOpen.value = !filterPanelOpen.value;
     settingsPanelOpen.value = false;
 }
 
 function toggleSettingsPanel() {
-    console.log("Toggle settings panel");
     settingsPanelOpen.value = !settingsPanelOpen.value;
     filterPanelOpen.value = false;
 }
