@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 
-const key = "state-0.2";
+const key = "state-0.3";
 
 export const useStateStore = defineStore(key, {
 
@@ -14,6 +14,10 @@ export const useStateStore = defineStore(key, {
 
     state: () => ({
         tree: [],
+        page: {
+            has_header: true,
+            has_footer: true,
+        },
         prefs: {
             results: [],
             tag_filter: "",
@@ -34,7 +38,7 @@ export const useStateStore = defineStore(key, {
         showFilename: (state) => state.prefs.showFilename,
         getTree: async (state) => {
             const token = document.querySelector('meta[name="csrf-token"]').content;
-            await fetch("/tree", {
+            await fetch("/dw/tree", {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": token
             })

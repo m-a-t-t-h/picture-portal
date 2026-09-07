@@ -2,10 +2,16 @@
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tags extends Model
 {
     public $table = "Tags";
+
+    public function tagChain(): HasMany
+    {
+        return $this->hasMany(TagChain::class, "tag_id", "id");
+    }
 
     public function scopeToplevel($q)
     {

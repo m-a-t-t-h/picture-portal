@@ -17,7 +17,7 @@ const router = createRouter({
                     components: {
                         default: () => import("./pages/HomeView.vue"),
                         header: () => import("./pages/HomeHeader.vue"),
-                        footer: () => import("@/components/Footer.vue")
+                        footer: () => import("./components/Footer.vue")
                     }
                 }, {
                     path: 'image/:img_id',

@@ -24,7 +24,7 @@
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
 
-                            <div class="row mb-0 buttons">
+                            <div class="buttons">
                                 <button type="submit" class="btn">{{ __('Login') }}</button>
 
                                 @if (Route::has('password.request'))

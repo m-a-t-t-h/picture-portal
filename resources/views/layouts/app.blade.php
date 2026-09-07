@@ -8,10 +8,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-<div id="app">
-    <nav class="header-bar">
+<div id="app" class="layout">
+    <nav class="header-wrapper">
         <div class="container">
-            <a href="/" class="text-xl">DigiKamWeb</a>
+            <a href="/" class="text-xl"></a>
         </div>
     </nav>
 

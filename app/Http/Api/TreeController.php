@@ -3,7 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\Services\TreeServices;
 
-class ApiTreeController extends Controller
+class TreeController extends Controller
 {
     public $useCache = FALSE;
 

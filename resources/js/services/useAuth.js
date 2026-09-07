@@ -6,7 +6,7 @@ export function useAuth() {
 
     const checkAuth = async () => {
         try {
-            const response = await fetch('/auth/user', {
+            const response = await fetch('/dw/auth/authed', {
                 credentials: 'same-origin',
                 headers: {
                     Accept: 'application/json',

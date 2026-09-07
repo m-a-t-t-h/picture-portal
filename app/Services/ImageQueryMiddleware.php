@@ -2,12 +2,13 @@
 
 namespace App\Services;
 
-use DB;
-use Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait ImageQueryMiddleware
 {
-    protected int $page;
+    protected int   $page;
+    protected array $excluded_tags;
 
     protected function newQuery(): self
     {
@@ -17,7 +18,9 @@ trait ImageQueryMiddleware
         return $this;
     }
 
-    protected function prepareQuery(): self
+
+
+    public function prepareRawQuery(): self
     {
         Log::debug(__METHOD__);
 
@@ -45,20 +48,14 @@ trait ImageQueryMiddleware
             "7" => "rand()"
         };
 
-        switch ($this->order_by) {
-            case 1: // id-asc
-                $orderByStr = "img_id";
-                break;
-
-        }
-
         foreach ($tag_filters as $idx => $filter_tag_id) {
             $filter_definitions .= "\n    filter$filter_tag_id as (select IM.id from Images IM LEFT JOIN ImageTags IT on IM.id = IT.imageid where tagid = $filter_tag_id),";
             $filter_references  .= " IM.id in (SELECT id FROM filter$filter_tag_id) AND ";
         }
         $filter_references = substr($filter_references, 0, -5) . ")";
 
-        $image_url_prefix = config("dkw.IMAGE_URL_PREFIX");
+        $image_url_prefix       = config("dkw.IMAGE_URL_PREFIX");
+        $image_url_prefix_strip = config("dkw.IMAGE_URL_PREFIX_STRIP");
 
         $sql           = /**@lang MariaDB */
             <<<SQL
@@ -85,6 +82,7 @@ WITH $filter_definitions
      --  The final query
      --
      query4 as (select  IM.id            AS  img_id,
+                        SHA2(concat(relativePath, '/', IM.name), 256) AS img_hash,
                         IM.name          AS  img_name,
                         II.rating        AS  img_rating,
                         II.creationDate  AS  img_creation_date,
@@ -94,14 +92,14 @@ WITH $filter_definitions
                         II.height        AS  img_height,
                         II.format        AS  img_format,
                         IM.filesize      AS  img_size,
-                        concat('$image_url_prefix', relativePath, '/', IM.name) AS img_path,
+                        -- regexp_replace(concat('$image_url_prefix', relativePath, '/', IM.name), '$image_url_prefix_strip', '') AS img_path,
                         tag_chain,
                         IMD.make as camera_make,
                         IMD.model as camera_model,
                         IMD.lens as camera_lens,
                         IMD.aperture as camera_aperture,
-    IMD.focalLength as camera_focalLength,
-    IMD.sensitivity AS camera_iso
+                        IMD.focalLength as camera_focalLength,
+                        IMD.sensitivity AS camera_iso
 
                 from query3
                          LEFT JOIN ImageTags IT ON IT.tagid = tag_id
@@ -117,7 +115,7 @@ WITH $filter_definitions
                 $enforce_public
     )
 
-select * 
+select *
 from query4
 group by img_id
 order by $orderByStr
@@ -130,9 +128,9 @@ SQL;
         return $this;
     }
 
-    protected function runQuery()
+    public function runQuery()
     {
-        $this->raw_query_results = DB::select($this->raw_sql);
+        $this->raw_query_results = \DB::select($this->raw_sql);
         Log::debug(count($this->raw_query_results) . " raw results");
 
         return $this;
@@ -151,31 +149,11 @@ SQL;
         return $this;
     }
 
-    protected function setTagFilter(array $tags): self
-    {
-        Log::debug("--------------");
-        Log::debug("");
-        Log::debug("");
-        Log::debug("Tag filters: [" . implode(",", $tags) . "]");
 
-        $this->tag_filters = $tags;
 
-        return $this;
-    }
 
-    public function setOrderBy($value): self
-    {
-        $this->order_by = $value;
 
-        return $this;
-    }
 
-    public function setPage(int $page_id): self
-    {
-        $this->page = $page_id;
-
-        return $this;
-    }
 
     protected function debugLogQuery($do_it = TRUE): self
     {
@@ -191,7 +169,7 @@ SQL;
         return $this;
     }
 
-    protected function getResults(): array
+    public function getResults(): array
     {
         return $this->raw_query_results;
     }
@@ -199,5 +177,11 @@ SQL;
     protected function getJsonResults(): string
     {
         return json_encode($this->getResults());
+    }
+
+    protected function setExcludedTags(array $excluded): self
+    {
+        $this->excluded_tags = $excluded;
+        return $this;
     }
 }

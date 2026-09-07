@@ -12,7 +12,7 @@ return [
     // ---- Whether to require images to be served to have the "Public" tag,
     //      otherwise an image will be considered private
     //
-    "REQUIRE_PUBLIC_TAG"              => env("DKW_REQUIRE_PUBLIC_TAG"),
+    "REQUIRE_PUBLIC_TAG"              => env("DKW_REQUIRE_PUBLIC_TAG", false),
 
     // ---- The ID value of the "Public" tag
     //
@@ -36,4 +36,9 @@ return [
     //      specify it here
     //
     "IMAGE_URL_PREFIX"   => env("DKW_IMAGE_URL_PREFIX"),
+
+    // ---- If the mountpoint requires a leading part of the image path to  be removed,
+    //      specify it here
+    //
+    "IMAGE_URL_PREFIX_STRIP"=>env("DKW_IMAGE_URL_PREFIX_STRIP"),
 ];

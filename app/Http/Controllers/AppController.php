@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-class MainController extends Controller
+class AppController extends Controller
 {
     public function get()
     {

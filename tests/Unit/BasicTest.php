@@ -2,9 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\Albums;
-use App\Models\Images;
-use App\Models\Tags;
+use App\Services\ImgSrv;
 use Tests\TestCase;
 
 /**
@@ -12,54 +10,11 @@ use Tests\TestCase;
  */
 class BasicTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_that_true_is_true(): void
+    public function testResolvingHashToFilePath(): void
     {
-        $this->assertTrue(TRUE);
+        $hash = "7259fc1d03a6391ed1521cf1cecf4c09a692dd15bc8783c14dc2fe2c8f4a343e";
+        $path = ImgSrv::hashToPath($hash);
 
-        $albums = Albums::get();
-        dd($albums)->toArray();
-    }
-
-    public function testTags()
-    {
-        $tags = Tags::toplevel()->orderBy("name")->get();
-        dd($tags[0]->toArray());
-    }
-
-    public function testTagMatches()
-    {
-        $matchs = Tags::match("XH558");
-        foreach ($matchs as $m) {
-            print "[" . $m->name . "]\n";
-        }
-    }
-
-    public function testCreateTree()
-    {
-        $tree = Tags::createTreeDownwards();
-        dd($tree);
-    }
-
-    public function testAlbumRelationship()
-    {
-
-        $images = Images::first();
-        dd($images->path);
-
-        dd($images->album->toArray());
-    }
-
-    public function tesTagstRelationship()
-    {
-        $images = Images::whereHas("tags", function ($q) {
-            return $q->where("name", "Vulcan");
-        })->whereHas("tags", function ($q) {
-            return $q->where("name", "XH558");
-        })
-            ->with(["tags"]);
-        dd($images->first()->toArray());
+        self::assertEquals("/Photos/2010/2010-06-24 - Farnborough Air Show/DSCF4560.JPG", $path);
     }
 }

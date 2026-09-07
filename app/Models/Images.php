@@ -9,7 +9,12 @@ class Images extends Model
 {
     public $table = "Images";
 
-    public function tags(): HasManyThrough
+    public const STATUS_NORMAL = 1;
+    public const STATUS_2      = 2;
+    public const STATUS_3      = 3;
+    public const STATUS_4      = 4;
+
+    public function imageTags(): HasManyThrough
     {
         return $this->hasManyThrough(
             Tags::class,
@@ -17,13 +22,39 @@ class Images extends Model
             "imageid",
             "id",
             "id",
-            "tagid"
+            "tagid",
         );
     }
 
-    public function album(): HasOne
+    public function imageAlbum(): HasOne
     {
         return $this->hasOne(Albums::class, "id", "album");
+    }
+
+    public function imageInformation(): HasOne
+    {
+        return $this->hasOne(ImageInformation::class, "imageid", "id");
+    }
+
+    public function imagePosition(): HasOne
+    {
+        return $this->hasOne(ImagePositions::class, "imageid", "id");
+    }
+
+    public function imageMetadata(): HasOne
+    {
+        return $this->hasOne(ImageMetadata::class, "imageid", "id");
+    }
+
+    public function tagChain():HasManyThrough {
+        return $this->hasManyThrough(
+            TagChain::class,
+            ImageTags::class,
+            "imageid",
+            "tag_id",
+            "id",
+            "tagid"
+        );
     }
 
     public function path(): Attribute

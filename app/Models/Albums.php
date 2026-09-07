@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Albums extends Model
@@ -15,5 +16,10 @@ class Albums extends Model
     public function gallery(): HasOne
     {
         return $this->hasOne(AlbumRoots::class, "id", "albumRoot");
+    }
+
+    public function albumRoot(): BelongsTo
+    {
+        return $this->belongsTo(AlbumRoots::class,  "albumRoot", "id");
     }
 }
