@@ -4,6 +4,7 @@ import {createPersistedState} from "pinia-plugin-persistedstate";
 import {createRouter, createWebHistory} from "vue-router";
 import AppWrapper from "./layouts/AppWrapper.vue";
 import MainLayout from "./layouts/MainLayout.vue";
+import "vue-data-ui/style.css";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,11 @@ const router = createRouter({
                     path: 'image/:img_hash/info',
                     components: {
                         default: () => import("./pages/ImageView.vue"),
+                    }
+                }, {
+                    path: 'test',
+                    components: {
+                        default: () => import("./pages/TestPage.vue"),
                     }
                 }
             ]
