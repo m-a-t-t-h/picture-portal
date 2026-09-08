@@ -1,8 +1,6 @@
-<?php
+<?php namespace App\Services;
 
-namespace App\Services;
-
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class AuthService
 {
@@ -18,5 +16,24 @@ class AuthService
         }
 
         return FALSE;
+    }
+
+    public static function isMp3Mp4DirectAccessEnabled(): bool
+    {
+        $config = config("dkw.DIRECT_ACCESS_TO_MP3_MP4");
+        if ($config === FALSE) return FALSE;
+
+        if ($config === "authed") {
+            if (Auth::id()) return TRUE;
+
+            return FALSE;
+        }
+
+        if ($config === TRUE) {
+            return TRUE;
+        }
+
+        return FALSE;
+
     }
 }

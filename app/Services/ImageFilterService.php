@@ -107,14 +107,19 @@ class ImageFilterService
         $images = $query->get();
 
         $mapped = $images->map(function (Images $image) {
+
+            // @todo Hardcoded excluded tags - https://github.com/m-a-t-t-h/picture-portal/issues/7
             $excluded_tags = ["1", "2829", "4"];
-
-            $tag_parts = NULL;
-            $tag_ids   = NULL;
-
-            $information = $image->imageInformation;
-            $metadata    = $image->imageMetadata;
+            $tag_ids       = NULL;
+            $information   = $image->imageInformation;
+            $metadata      = $image->imageMetadata;
             $filtered_tags = [];
+
+            if (isset($information) && isset($information->format)) {
+                if ($information->format === "MP3" || $information->format === "MP4") {
+                    if (!AuthService::isMp3Mp4DirectAccessEnabled()) return NULL;
+                }
+            }
 
             $tags = $image->tagChain->toArray();
             if (count($tags)) {
@@ -131,7 +136,7 @@ class ImageFilterService
                 }
             }
 
-            return [
+            $response = [
                 "tags"                  => $filtered_tags,
                 "img_hash"              => $image->img_hash,
                 "tag_ids"               => $tag_ids,
@@ -151,6 +156,16 @@ class ImageFilterService
                 'camera_focalLength'    => $metadata?->focalLength,
                 'camera_iso'            => $metadata?->sensitivity,
             ];
+
+            if (isset($information) && isset($information->format)) {
+                if ($information->format === "MP3" || $information->format === "MP4") {
+                    if (AuthService::isMp3Mp4DirectAccessEnabled()) {
+                        $response["img_path"] = $image->path;
+                    }
+                }
+            }
+
+            return $response;
         });
 
         $this->results = $mapped;
@@ -158,17 +173,20 @@ class ImageFilterService
         return $this;
     }
 
-    public function getResults(): ?Collection
+    public
+    function getResults(): ?Collection
     {
         return $this->results ?? NULL;
     }
 
-    public function toJson(): string
+    public
+    function toJson(): string
     {
         return isset($this->results) ? json_encode($this->results) : "";
     }
 
-    protected function applyCollectionConstraint(Builder $query): Builder
+    protected
+    function applyCollectionConstraint(Builder $query): Builder
     {
         $query->whereHas('imageAlbum.albumRoot', function ($query) {
             $query->where('id', $this->collection_id ?? config("dkw.ROOT_COLLECTION_ID"));
@@ -177,7 +195,8 @@ class ImageFilterService
         return $query;
     }
 
-    protected function applyCameraConstraint(Builder $query): Builder
+    protected
+    function applyCameraConstraint(Builder $query): Builder
     {
         if (!isset($this->camera_filter)) return $query;
 
@@ -186,14 +205,16 @@ class ImageFilterService
         return $query;
     }
 
-    protected function applyImageFormatConstraint(Builder $query): Builder
+    protected
+    function applyImageFormatConstraint(Builder $query): Builder
     {
         $query->whereHas('imageInformation', function ($query) { $query->where('format', '<>', 'RAW-NEF'); });
 
         return $query;
     }
 
-    protected function applyPublicTagConstraint(Builder $query): Builder
+    protected
+    function applyPublicTagConstraint(Builder $query): Builder
     {
         if (!$this->enforce_public_tag) return $query;
         if (!AuthService::isPublicEnforced()) return $query;
@@ -205,7 +226,8 @@ class ImageFilterService
         return $query;
     }
 
-    protected function applySelectedTagsConstraint(Builder $query): Builder
+    protected
+    function applySelectedTagsConstraint(Builder $query): Builder
     {
         if (!isset($this->tag_filters)) return $query;
 
@@ -214,7 +236,8 @@ class ImageFilterService
         return $query;
     }
 
-    protected function applyOrdering(Builder $query): Builder
+    protected
+    function applyOrdering(Builder $query): Builder
     {
         if (!isset($this->order_by)) $this->order_by = 7;
 
@@ -243,7 +266,8 @@ class ImageFilterService
         return $query;
     }
 
-    private function joinTagChain(Builder $query): Builder
+    private
+    function joinTagChain(Builder $query): Builder
     {
         $query
             ->leftJoin("ImageTags", "ImageTags.imageid", "=", "Images.id")
