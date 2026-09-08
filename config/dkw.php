@@ -41,4 +41,10 @@ return [
     //      specify it here
     //
     "IMAGE_URL_PREFIX_STRIP"=>env("DKW_IMAGE_URL_PREFIX_STRIP"),
+
+    // ---- Allow MP3 and MP4 to access the underlying file system without image hashing
+    //
+    //      USE WITH CAUTION
+    //
+    "DIRECT_ACCESS_TO_MP3_MP4"=>env("DKW_DIRECT_ACCESS_TO_MP3_MP4", false),
 ];
