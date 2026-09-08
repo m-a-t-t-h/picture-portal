@@ -30,11 +30,7 @@ const router = createRouter({
     ],
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {
-            console.log("Returning to savedPosition of " + savedPosition.top);
-            //window.scrollTo(0, savedPosition.top);
-            console.log(to);
-
-            if (to.fullPath === "/") {
+            if (to.fullPath === "/dw") {
                 return {
                     el: '.media',
                     top: savedPosition.top,
