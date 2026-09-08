@@ -100,6 +100,7 @@
 }
 
 .media {
+
     .loop {
         @apply w-full grid grid-cols-1 overflow-hidden p-0
         md:w-1/2
@@ -129,13 +130,7 @@
                 }
             }
 
-            .img_tags {
-                @apply pt-2 flex flex-row flex-wrap  items-start;
 
-                .img_tag {
-                    @apply text-xs border-amber-50 border rounded bg-amber-100 mr-1 mb-1 p-1;
-                }
-            }
 
             .format_mp4 {
                 @apply rounded-lg shadow-lg
@@ -172,6 +167,14 @@
         }
     }
 }
+.img_tags {
+    @apply pt-2 flex flex-row flex-wrap  items-start;
+
+    .img_tag {
+        @apply text-xs border-amber-50 border rounded bg-amber-100 mr-1 mb-1 p-1;
+    }
+}
+
 
 .auth {
     .card {
