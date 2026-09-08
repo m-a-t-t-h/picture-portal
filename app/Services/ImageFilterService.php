@@ -107,13 +107,12 @@ class ImageFilterService
         $images = $query->get();
 
         $mapped = $images->map(function (Images $image) {
+
+            // @todo Hardcoded excluded tags - https://github.com/m-a-t-t-h/picture-portal/issues/7
             $excluded_tags = ["1", "2829", "4"];
-
-            $tag_parts = NULL;
-            $tag_ids   = NULL;
-
-            $information = $image->imageInformation;
-            $metadata    = $image->imageMetadata;
+            $tag_ids       = NULL;
+            $information   = $image->imageInformation;
+            $metadata      = $image->imageMetadata;
             $filtered_tags = [];
 
             $tags = $image->tagChain->toArray();
@@ -131,7 +130,7 @@ class ImageFilterService
                 }
             }
 
-            return [
+            $response = [
                 "tags"                  => $filtered_tags,
                 "img_hash"              => $image->img_hash,
                 "tag_ids"               => $tag_ids,
@@ -151,6 +150,16 @@ class ImageFilterService
                 'camera_focalLength'    => $metadata?->focalLength,
                 'camera_iso'            => $metadata?->sensitivity,
             ];
+
+            if (isset($information) && isset($information->format)) {
+                switch ($information->format) {
+                    case "MP3": case "MP4":
+                        $response["img_path"] = $image->path;
+                        break;
+                }
+            }
+
+            return $response;
         });
 
         $this->results = $mapped;

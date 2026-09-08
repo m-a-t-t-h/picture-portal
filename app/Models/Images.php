@@ -61,10 +61,10 @@ class Images extends Model
     {
         return Attribute::make(
             get: function () {
-                $path = $this->album()->first()->relativePath;
+                $path = $this->imageAlbum()->first()->relativePath;
                 if (!str_starts_with($path, "/")) $path = "/" . $path;
 
-                return "/images" . $path;
+                return "/images" . $path . "/" . $this->name;
             }
         );
     }
