@@ -6,10 +6,10 @@ import dayjs from 'dayjs';
 
 const state = useStateStore();
 const route = useRoute();
-const img_id = route.params.img_id;
+const img_hash = route.params.img_hash;
 let photo = reactive(state.getSelectedPhoto);
 let info = reactive({});
-let loaded = ref(false);
+let loaded = ref(true);
 
 state.page.has_footer = false;
 state.page.has_header = false;
@@ -18,44 +18,62 @@ onMounted(async () => {
     state.page.has_footer = false;
     state.page.has_header = false;
 
-    await loadImage();
+    window.scrollTo(0, 0);
 });
 
-async function loadImage() {
-    const token = document.querySelector('meta[name="csrf-token"]').content;
-    const ret = await fetch("/dw/image/" + img_id + "/info",
-        {method: "POST", headers: {"Content-Type": "application/json", "X-CSRF-TOKEN": token}})
-        .then(response => response.json()).then(data => {
-            return data[0];
-        });
-
-    loaded.value = true;
-    info = ret;
+import { useRouter } from 'vue-router'
+const router = useRouter()
+function goBack() {
+    router.back()
 }
 
 </script>
 
 <template>
 
-    <div v-if="loaded" class="image_info overflow-hidden">
+    <button type="button" @click="goBack" class="fixed z-50 hover:curor-pointer border p-1 bg-white -mt-12">
+        Back to images
+    </button>
+
+    <div class="image_info ">
 
         <div class="image_row">
-            <img :src="'/dw/imgsrv/full/' + photo.img_hash" :id="`img_${photo.img_id}`" loading="lazy" decoding="async" :alt="photo.name" class="max-h-fit object-contain"/>
+            <img
+                @click="goBack"
+                :src="'/dw/imgsrv/full/' + img_hash" :id="`img_${photo.img_id}`" loading="lazy" decoding="async" :alt="photo.name" class="max-h-fit object-contain"/>
 
             <div class="info_row">
 
                 <div class="lhs">
+
+                    <div class="field ">
+                        <div class="img_tags">
+                            <div v-for="(item) in photo.tags" :key="item" class="img_tag">
+                                <span class="img_tag_name">#{{ item[1] }}</span>
+                                <span class="img_tag_id" v-if="state.prefs.showTagId">({{ item.id }})</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="field">
                         <div class="label">Filename</div>
                         <div class="value">{{ photo.img_name }}</div>
                     </div>
+
+
                     <div class="field">
                         <div class="label">Digitization</div>
-                        <div class="value">{{ photo.img_digitization_date ? dayjs(photo.img_digitization_date).format('dddd MMMM D, YYYY') : 'Unknown' }}</div>
+                        <div class="value">{{
+                                photo.img_digitization_date ? dayjs(photo.img_digitization_date).format('dddd MMMM D, YYYY') : 'Unknown'
+                            }}
+                        </div>
                     </div>
                     <div class="field">
                         <div class="label">Creation</div>
-                        <div class="value">{{ photo.img_creation_date ? dayjs(photo.img_creation_date).format('dddd MMMM D, YYYY') : 'Unknown' }}</div>
+                        <div class="value">{{
+                                photo.img_creation_date ? dayjs(photo.img_creation_date).format('dddd MMMM D, YYYY') : 'Unknown'
+                            }}
+                        </div>
                     </div>
 
                     <div class="field">
@@ -64,7 +82,9 @@ async function loadImage() {
                     </div>
                     <div class="field">
                         <div class="label">Parameters</div>
-                        <div class="value">{{ info.sensitivity ? 'ISO ' + info.sensitivity : 'ISO Unknown' }} f{{ info.aperture ?? '' }}</div>
+                        <div class="value">{{ info.sensitivity ? 'ISO ' + info.sensitivity : 'ISO Unknown' }}
+                            f{{ info.aperture ?? '' }}
+                        </div>
                     </div>
                     <div class="field">
                         <div class="label">Camera</div>
@@ -77,8 +97,8 @@ async function loadImage() {
                     <div class="field">
                         <div class="label">Location</div>
                         <div class="value">
-                            {{ info.latitudeNumber ? info.latitudeNumber + 'N' : 'Unknown'}}
-                            {{ info.longitudeNumber ? info.longitudeNumber + 'W' : info.latitudeNumber ? 'Unknown' : ''}}
+                            {{ info.latitudeNumber ? info.latitudeNumber + 'N' : 'Unknown' }}
+                            {{ info.longitudeNumber ? info.longitudeNumber + 'W' : info.latitudeNumber ? 'Unknown' : '' }}
                         </div>
                     </div>
                     <div class="field">

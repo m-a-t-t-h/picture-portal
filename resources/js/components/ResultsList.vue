@@ -70,37 +70,8 @@ onMounted(() => {
 });
 
 const imgClicked = function (photo) {
-
     state.setSelectedPhoto(photo);
-    router.push("/dw/image/" + photo.img_id);
-
-    /*
-
-    let element = window.document.getElementById("img_" + photo.img_id);
-    if (element) {
-        showShield.value = true;
-        if (element.style.position !== "fixed") {
-            element.style.position = "fixed";
-            element.style.left = "0";
-            element.style.top = "0";
-            element.style.height = "100%";
-            element.style.objectFit = "contain";
-            element.style.minHeight = "stretch";
-            element.style.zIndex = "50";
-
-            window.document.getElementById("footer").style.display = "none";
-        } else {
-            showShield.value = false;
-            element.style.position = "inherit";
-            element.style.minHeight = "inherit";
-            element.style.height = "inherit";
-            element.style.width = "100%";
-
-
-            window.document.getElementById("footer").style.display = "flex";
-        }
-    }
-     */
+    router.push("/dw/image/" + photo.img_hash  + "/info");
 };
 
 </script>
