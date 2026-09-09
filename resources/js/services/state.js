@@ -31,6 +31,9 @@ export const useStateStore = defineStore(key, {
             showRating: false,
             showCameraInfo: false,
             selected_photo: null,
+        },
+        auth: {
+            isAuthed: false
         }
     }),
 

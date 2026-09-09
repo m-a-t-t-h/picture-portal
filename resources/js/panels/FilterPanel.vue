@@ -2,19 +2,16 @@
 import {onMounted, ref, watch} from "vue";
 import {useStateStore} from "../services/state.js";
 import VTree from "@wsfe/vue-tree";
-import {useAuth} from "../services/useAuth.js";
 import {Select} from "vue3-select-component";
 import "vue3-select-component/styles";
 
-let treeData         = ref([]);
-let treeLoaded       = ref(false);
+let treeData = ref([]);
+let treeLoaded = ref(false);
 let showSelectedOnly = ref(false);
-const treeRef        = ref();
-
-const emits           = defineEmits(["filter-panel-toggle"]);
-const state           = useStateStore();
-const {user, loading} = useAuth();
-let requestInFlight   = false;
+const treeRef = ref();
+const emits = defineEmits(["filter-panel-toggle"]);
+const state = useStateStore();
+let requestInFlight = false;
 
 const handleCheckedChange = (nodes) => {
     if (requestInFlight) return;
@@ -24,14 +21,14 @@ const handleCheckedChange = (nodes) => {
     });
     state.setTagFilter(JSON.stringify(checked));
 };
-const clearFilter         = () => {
+const clearFilter = () => {
     treeRef.value?.clearChecked();
     treeRef.value?.setExpandAll(false);
 };
-const collapseAll         = () => {
+const collapseAll = () => {
     treeRef.value?.setExpandAll(false);
 };
-const selectedOnly        = () => {
+const selectedOnly = () => {
     showSelectedOnly.value = !showSelectedOnly.value;
 
     if (showSelectedOnly.value) {
@@ -40,19 +37,21 @@ const selectedOnly        = () => {
         treeRef.value.showCheckedNodes(false);
     }
 };
-const orderBy             = ref(state.prefs.orderBy);
-const orderByOptions      = [
+const orderBy = ref(state.prefs.orderBy);
+const orderByOptions = [
+    {label: 'Random', value: '7'},
+    {label: 'Rating (asc)', value: '8'},
+    {label: 'Rating (desc)', value: '9'},
     {label: 'ID (asc)', value: '1'},
     {label: 'ID (desc)', value: '2'},
     {label: 'Filename (asc)', value: '3'},
     {label: 'Filename (desc)', value: '4'},
     {label: 'Digitization date (asc)', value: '5'},
     {label: 'Digitization date (desc)', value: '6'},
-    {label: 'Random', value: '7'}
 ];
 
 onMounted(async () => {
-    treeData         = await state.getTree;
+    treeData = await state.getTree;
     treeLoaded.value = true;
 
     // ---- Restore the previous state of the tree selections

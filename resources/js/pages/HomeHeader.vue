@@ -1,12 +1,8 @@
 <script setup>
-import {useAuth} from "../services/useAuth.js";
+import {useStateStore} from "../services/state.js";
 
-const user  = useAuth();
 const emits = defineEmits(["open-main-menu"]);
 const showMainMenu = import.meta.env.VITE_SHOW_MAIN_MENU;
-
-console.log("Show main menu: [" + showMainMenu + "]");
-
 
 defineProps({
     isMainMenuOpen: Boolean,
@@ -19,16 +15,5 @@ defineProps({
             <img :aria-expanded="isMainMenuOpen" aria-label="Open main menu" src="/svg/menu.svg" alt="Open main menu">
         </button>
         <h1 class="pl-3">Home</h1>
-    </div>
-
-    <div class="rhs">
-        <div v-if="!user">
-            <a href="/auth/login" class="btn px-3">
-              Login
-            </a>
-        </div>
-        <div v-else>
-
-        </div>
     </div>
 </template>

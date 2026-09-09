@@ -1,7 +1,8 @@
 <script setup>
-import {useAuth} from "../services/useAuth.js";
+import {useStateStore} from "../services/state.js";
 
-const user  = useAuth();
+const state = useStateStore();
+const authed = state.auth.isAuthed;
 const emits = defineEmits(["open-main-menu"]);
 
 defineProps({
@@ -17,16 +18,5 @@ defineProps({
         </button>
         <h1>Image view header, with main menu</h1>
 
-    </div>
-
-    <div class="rhs">
-        <div v-if="!user">
-            <a href="/auth/login" class="btn px-3">
-              Login
-            </a>
-        </div>
-        <div v-else>
-
-        </div>
     </div>
 </template>

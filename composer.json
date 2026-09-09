@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "m-a-t-t-h/digikamweb",
+    "name": "m-a-t-t-h/picture-portal",
     "type": "project",
     "description": "Publish your digiKam collections through a local web UI",
     "keywords": [

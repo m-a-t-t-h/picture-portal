@@ -173,20 +173,56 @@ class ImageFilterService
         return $this;
     }
 
-    public
-    function getResults(): ?Collection
+    public function getResults(): ?Collection
     {
         return $this->results ?? NULL;
     }
 
-    public
-    function toJson(): string
+    public function toJson(): string
     {
         return isset($this->results) ? json_encode($this->results) : "";
     }
 
-    protected
-    function applyCollectionConstraint(Builder $query): Builder
+    protected function applyOrdering(Builder $query): Builder
+    {
+        if (!isset($this->order_by)) $this->order_by = 7;
+
+        switch ($this->order_by) {
+            case 1:
+                $query->orderBy("Images.id");
+                break;
+            case 2:
+                $query->orderByDesc("Images.id");
+                break;
+            case 3:
+                $query->orderBy("Images.name");
+                break;
+            case 4:
+                $query->orderByDesc("Images.name");
+                break;
+            case 5:
+                $query->orderBy("imageInformation.digitizationDate");
+                break;
+            case 6:
+                $query->orderByDesc("imageInformation.digitizationDate");
+                break;
+            case 7:
+                $query->inRandomOrder();
+                break;
+            case 8:
+                $query->leftJoin("ImageInformation", "id", "imageid");
+                $query->orderBy("ImageInformation.rating");
+                break;
+            case 9:
+                $query->leftJoin("ImageInformation", "id", "imageid");
+                $query->orderByDesc("ImageInformation.rating");
+                break;
+        }
+
+        return $query;
+    }
+
+    protected function applyCollectionConstraint(Builder $query): Builder
     {
         $query->whereHas('imageAlbum.albumRoot', function ($query) {
             $query->where('id', $this->collection_id ?? config("dkw.ROOT_COLLECTION_ID"));
@@ -195,8 +231,7 @@ class ImageFilterService
         return $query;
     }
 
-    protected
-    function applyCameraConstraint(Builder $query): Builder
+    protected function applyCameraConstraint(Builder $query): Builder
     {
         if (!isset($this->camera_filter)) return $query;
 
@@ -205,16 +240,14 @@ class ImageFilterService
         return $query;
     }
 
-    protected
-    function applyImageFormatConstraint(Builder $query): Builder
+    protected function applyImageFormatConstraint(Builder $query): Builder
     {
         $query->whereHas('imageInformation', function ($query) { $query->where('format', '<>', 'RAW-NEF'); });
 
         return $query;
     }
 
-    protected
-    function applyPublicTagConstraint(Builder $query): Builder
+    protected function applyPublicTagConstraint(Builder $query): Builder
     {
         if (!$this->enforce_public_tag) return $query;
         if (!AuthService::isPublicEnforced()) return $query;
@@ -226,8 +259,7 @@ class ImageFilterService
         return $query;
     }
 
-    protected
-    function applySelectedTagsConstraint(Builder $query): Builder
+    protected function applySelectedTagsConstraint(Builder $query): Builder
     {
         if (!isset($this->tag_filters)) return $query;
 
@@ -236,38 +268,16 @@ class ImageFilterService
         return $query;
     }
 
-    protected
-    function applyOrdering(Builder $query): Builder
-    {
-        if (!isset($this->order_by)) $this->order_by = 7;
 
-        switch ($this->order_by) {
-            case "1":
-                $query->orderBy("Images.id");
-                break;
-            case "2":
-                $query->orderByDesc("Images.id");
-                break;
-            case "3":
-                $query->orderBy("Images.name");
-                break;
-            case 4:
-                $query->orderByDesc("Images.name");
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
-            case 7:
-                $query->inRandomOrder();
-                break;
-        }
 
-        return $query;
-    }
-
-    private
-    function joinTagChain(Builder $query): Builder
+    /**
+     * @param Builder $query
+     *
+     * @return Builder
+     *
+     * @deprecated
+     */
+    private function joinTagChain(Builder $query): Builder
     {
         $query
             ->leftJoin("ImageTags", "ImageTags.imageid", "=", "Images.id")
