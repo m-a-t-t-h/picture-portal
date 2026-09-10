@@ -83,15 +83,15 @@ watch(orderBy, async () => {
                     <div class=" border-r-2 border-r-slate-200 pr-3 mr-3 block">
                         <Select v-model="orderBy" :options="orderByOptions" placeholder="Order by"></Select>
                     </div>
-                    <button @click="selectedOnly">
-                        <img src="/svg/checkbox-checked.svg" class="w-6 h-6" alt="Show selected only"></button>
-                    <button @click="collapseAll">
-                        <img src="/svg/minimise.svg" class="w-6 h-6" alt="Collapse all open nodes"></button>
-                    <button @click="clearFilter"><img src="/svg/trashcan.svg" class="w-6 h-6" alt="Reset filter">
+                    <button @click="selectedOnly" class="ikon ikon-wb">
+                        <img src="/svg/checkbox-checked.svg" alt="Show selected only"></button>
+                    <button @click="collapseAll" class="ikon ikon-wb">
+                        <img src="/svg/minimise.svg" c alt="Collapse all open nodes"></button>
+                    <button @click="clearFilter" class="ikon ikon-wb"><img src="/svg/trashcan.svg"  alt="Reset filter">
                     </button>
 
                     <div class="border-l-2 border-l-slate-200 ml-3">
-                        <button class="btn ml-3 " @click="emits('filter-panel-toggle')">
+                        <button class="ikon ikon-wb ml-3 " @click="emits('filter-panel-toggle')">
                             <img src="/svg/close.svg" alt="Close panel">
                         </button>
                     </div>
@@ -111,7 +111,7 @@ watch(orderBy, async () => {
 
         <div class="panel-footer">
             <div></div>
-            <button @click="emits('filter-panel-toggle')"><span>Close</span></button>
+            <button class="ikon ikon-wb ikon-btn" @click="emits('filter-panel-toggle')"><span>Close</span></button>
         </div>
     </div>
 </template>

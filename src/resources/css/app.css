@@ -70,31 +70,6 @@
     height: 13px !important;
 }
 
-
-.footer-bars, .header-bars {
-    position:        fixed;
-    z-index:         20;
-    display:         flex;
-    align-items:     center;
-    justify-content: space-between;
-    height:          64px;
-    padding:         0 8px;
-    background:      #555;
-    color:           white;
-}
-
-.footer-bars {
-    right:  0;
-    bottom: 0;
-    left:   0;
-}
-
-.header-bars {
-    left:  0;
-    top:   0;
-    right: 0;
-}
-
 .media-loop {
     @apply grid ;
     @apply grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
@@ -149,7 +124,8 @@
             }
 
             .format_mp3 {
-                @apply rounded-lg shadow-lg;
+                @apply rounded-lg shadow-lg min-w-full;
+                audio { @apply w-full; }
             }
 
             .img-container {
@@ -184,6 +160,7 @@
         }
     }
 }
+
 .img_tags {
     @apply pt-2 flex flex-row flex-wrap  items-start;
 
@@ -191,7 +168,6 @@
         @apply text-xs border-amber-50 border rounded bg-amber-100 mr-1 mb-1 p-1;
     }
 }
-
 
 .auth {
     .card {
@@ -309,11 +285,12 @@
         @apply flex flex-row justify-between items-center;
     }
 
+    .header-wrapper, .footer-wrapper {
+
+    }
+
     .main-content-wrapper {
         @apply flex flex-col pt-12 ;
-
-        .main-content {
-        }
     }
 }
 
@@ -388,4 +365,24 @@
 .btn-link {
     @apply text-base/10;
     @apply hover:text-blue-500;
+}
+
+.ikon {
+    @apply border-2 border-slate-100 rounded-md p-1;
+    @apply bg-slate-300;
+    @apply w-8 h-8;
+
+    @apply flex items-center;
+
+    @apply hover:cursor-pointer;
+    @apply hover:bg-slate-100;
+    @apply hover:border-white hover:border-2;
+}
+
+.ikon-wb {
+    @apply bg-slate-100;
+    @apply hover:bg-slate-300 hover:border-slate-400;
+}
+.ikon-btn {
+    @apply w-auto px-6 border-slate-300 text-sm;
 }

@@ -96,8 +96,8 @@ const imgClicked = function (photo) {
                             <source :src="photo.img_path">
                         </video>
                     </div>
-                    <div v-else-if="photo.img_format==='MP3'">
-                        <audio class="format_mp3" controls :src="photo.img_path"></audio>
+                    <div v-else-if="photo.img_format==='MP3'" class="format_mp3" >
+                        <audio controls :src="photo.img_path"></audio>
                     </div>
                     <div class="img-container pink" v-else-if="photo.img_format==='JPG' || photo.img_format==='GIF' || photo.img_format==='PNG' || photo.img_format==='WEBP' || photo.img_format==='AVIF'" @click="imgClicked(photo)">
                         <img :src="'/dw/imgsrv/thumb/' + photo.img_hash" :id="`img_${photo.img_id}`" class="format_img" loading="lazy" decoding="async" :alt="photo.img_path">

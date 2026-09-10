@@ -14,7 +14,7 @@ const emits = defineEmits(["settings-panel-toggle"]);
                 <h1>Settings</h1>
                 <div class="icon-wrapper">
                     <div class="border-l-2 border-l-slate-200 ml-3">
-                        <button class="btn ml-3 " @click="emits('settings-panel-toggle')">
+                        <button class="ikon ikon-wb ml-3 " @click="emits('settings-panel-toggle')">
                             <img src="/svg/close.svg" alt="Close panel">
                         </button>
                     </div>
@@ -87,7 +87,7 @@ const emits = defineEmits(["settings-panel-toggle"]);
 
         <div class="panel-footer">
             <div></div>
-            <button @click="emits('settings-panel-toggle')"><span>Close</span></button>
+            <button class="ikon ikon-wb ikon-btn" @click="emits('settings-panel-toggle')"><span>Close</span></button>
         </div>
     </div>
 </template>

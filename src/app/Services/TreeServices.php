@@ -11,6 +11,7 @@ class TreeServices
     {
         $root_ids = json_decode(config("dkw.ROOT_TAG_ARRAY"), TRUE);
         $tree     = [];
+        \Log::debug($root_ids);
 
         foreach ($root_ids as $root_tag_id => $tag_label) {
             $children = Tags::createTreeDownwards($root_tag_id);

@@ -16,6 +16,7 @@ class TreeController extends Controller
             return response($tree, 200)->header("Content-Type", "application/json");
         }
 
+        \Log::debug("Root tag ID: [" . config("dkw.ROOT_COLLECTION_ID") . "]");
         $tree = TreeServices::getTree();
 
         if ($this->useCache) file_put_contents($tree_cache, json_encode($tree));

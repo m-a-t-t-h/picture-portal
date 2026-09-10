@@ -164,7 +164,10 @@ class ImageFilterService
             if (isset($information) && isset($information->format)) {
                 if ($information->format === "MP3" || $information->format === "MP4") {
                     if (AuthService::isMp3Mp4DirectAccessEnabled()) {
-                        $response["img_path"] = $image->path;
+                        $response["img_path"] =
+                            config("dkw.IMAGE_URL_PREFIX") .
+                            "svr" . config("dkw.ROOT_COLLECTION_ID") .
+                            str_replace(config("dkw.IMAGE_URL_PREFIX_STRIP"), "", $image->path);
                     }
                 }
             }

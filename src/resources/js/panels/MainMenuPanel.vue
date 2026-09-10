@@ -17,8 +17,8 @@ const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('co
             <div class="panel-heading-inner">
                 <h1>PicturePortal</h1>
                 <div class="icon-wrapper">
-                    <button class="btn" @click="emits('close-main-menu')">
-                        <img src="/svg/close.svg">
+                    <button class="ikon ikon-wb" @click="emits('close-main-menu')">
+                        <img src="/svg/close.svg" alt="Close menu">
                     </button>
                 </div>
             </div>
@@ -26,8 +26,8 @@ const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('co
         <div class="flex flex-col panel-body">
             <div class="opacity-50 w-full borer-b ">
 
-                <a v-if="!authed" class="btn-row " href="/login">
-                    <img src="/svg/login.svg" class="w-10">
+                <a v-if="!authed" class="btn-row  " href="/login" >
+                    <img src="/svg/login.svg"  alt="login">
                     <span class="text">Log in</span>
                 </a>
 

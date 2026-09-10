@@ -15,8 +15,6 @@ services:
       - /home/matth/mnt/nfs/pve/dir02:/var/www/html/storage/app/images/svr9
       - /home/matth/mnt/nfs/pve/Main:/var/www/html/storage/app/images/svr5
 
-    env_file: "src/.env"
-
   frontend:
     depends_on:
       - backend
@@ -28,6 +26,8 @@ services:
       - '8686:80'
     volumes:
       - ./src:/var/www/html
+      - /home/matth/mnt/nfs/pve/dir02:/var/www/html/storage/app/images/svr9
+      - /home/matth/mnt/nfs/pve/Main:/var/www/html/storage/app/images/svr5
     links:
       - backend
 
@@ -59,7 +59,6 @@ services:
     volumes:
       - ./src:/var/www/html
       - ./.infra/dev/queuerunner/php-local.ini:/usr/local/etc/php/conf.d/local.ini
-    env_file: "src/.env"
 
   scheduler:
     restart: unless-stopped
@@ -74,7 +73,6 @@ services:
     volumes:
       - ./src:/var/www/html
       - ./.infra/dev/scheduler/php-local.ini:/usr/local/etc/php/conf.d/local.ini
-    env_file: "src/.env"
 
   redis:
     image: redis:7-alpine
@@ -94,8 +92,6 @@ services:
       - mailpit_data:/data
     environment:
       MP_DATABASE: /data/mailpit.db
-
-
 
 volumes:
   mailpit_data:
