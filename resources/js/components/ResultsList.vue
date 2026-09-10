@@ -103,9 +103,7 @@ const imgClicked = function (photo) {
                         <div v-if="state.prefs.showCameraInfo" class=" rounded-lg  relative inset-0 -mt-10 h-10  text-slate-700 w-full z-20 text-xs ">
                             <div class="flex flex-col bg-slate-200/80 p-1 px-2">
                                 <div>{{ photo.camera_model }}</div>
-                                <div>f{{ photo.camera_aperture }} 1/{{ photo.camera_focalLength }}"
-                                    ISO{{ photo.camera_iso }}
-                                </div>
+                                <div>f{{ photo.camera_aperture }} 1/{{ photo.camera_focalLength }}" ISO{{ photo.camera_iso }}</div>
                             </div>
                         </div>
                         <div v-if="state.prefs.showRating" class="iinfo img_rating">
