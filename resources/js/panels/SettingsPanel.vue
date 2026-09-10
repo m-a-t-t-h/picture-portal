@@ -1,17 +1,8 @@
 <script setup>
 import {useStateStore} from "../services/state.js";
-import {ref} from "vue";
-import {useAuth} from "../services/useAuth.js";
-
-const state           = useStateStore();
-const {user, loading} = useAuth();
-
-const close = (event) => {
-    window.dispatchEvent(new CustomEvent("toggle-settings-panel"));
-};
-
-const emits = defineEmits([ "settings-panel-toggle"]);
-
+const state = useStateStore();
+const authed = state.auth.isAuthed;
+const emits = defineEmits(["settings-panel-toggle"]);
 </script>
 
 <template>
@@ -24,7 +15,7 @@ const emits = defineEmits([ "settings-panel-toggle"]);
                 <div class="icon-wrapper">
                     <div class="border-l-2 border-l-slate-200 ml-3">
                         <button class="btn ml-3 " @click="emits('settings-panel-toggle')">
-                            <img src="/svg/close.svg">
+                            <img src="/svg/close.svg" alt="Close panel">
                         </button>
                     </div>
                 </div>
@@ -36,9 +27,9 @@ const emits = defineEmits([ "settings-panel-toggle"]);
                 <span class="label">Above image</span>
 
                 <div class="field">
-                    <label for="showFilename" class="hover:cursor-pointer" :class="{'disabled':!user}">
-                        <input type="checkbox" id="showFilename" :checked="state.prefs.showFilename" @change="state.toggleShowFilename" :disabled="!user">
-                        <span >Show filename</span>
+                    <label for="showFilename" class="hover:cursor-pointer" :class="{'disabled':!authed}">
+                        <input type="checkbox" id="showFilename" :checked="state.prefs.showFilename" @change="state.toggleShowFilename" :disabled="!authed">
+                        <span>Show filename</span>
                     </label>
                 </div>
                 <div class="field">
@@ -53,8 +44,8 @@ const emits = defineEmits([ "settings-panel-toggle"]);
                 <span class="label">Below image</span>
 
                 <div class="field">
-                    <label for="showRating" class="hover:cursor-pointer" :class="{'disabled':!user}">
-                        <input type="checkbox" id="showRating" :checked="state.prefs.showRating" @change="state.toggleShowRating"  :disabled="!user">
+                    <label for="showRating" class="hover:cursor-pointer" :class="{'disabled':!authed}">
+                        <input type="checkbox" id="showRating" :checked="state.prefs.showRating" @change="state.toggleShowRating" :disabled="!authed">
                         <span>Show rating</span>
                     </label>
                 </div>
@@ -66,27 +57,27 @@ const emits = defineEmits([ "settings-panel-toggle"]);
                     </label>
                 </div>
                 <div class="field">
-                    <label for="showTagId" class="hover:cursor-pointer" :class="{'disabled':!user}">
-                        <input type="checkbox" id="showTagId" :checked="state.prefs.showTagId" @change="state.toggleShowTagId"  :disabled="!user">
+                    <label for="showTagId" class="hover:cursor-pointer" :class="{'disabled':!authed}">
+                        <input type="checkbox" id="showTagId" :checked="state.prefs.showTagId" @change="state.toggleShowTagId" :disabled="!authed">
                         <span>Show tag ID</span>
                     </label>
                 </div>
                 <div class="field">
-                    <label for="showImagePath" class="hover:cursor-pointer" :class="{'disabled':!user}">
-                        <input type="checkbox" id="showImagePath" :checked="state.prefs.showPath" @change="state.toggleShowPath"  :disabled="!user">
+                    <label for="showImagePath" class="hover:cursor-pointer" :class="{'disabled':!authed}">
+                        <input type="checkbox" id="showImagePath" :checked="state.prefs.showPath" @change="state.toggleShowPath" :disabled="!authed">
                         <span>Show path</span>
                     </label>
                 </div>
                 <div class="field">
-                    <label for="showImageId" class="hover:cursor-pointer" :class="{'disabled':!user}">
-                        <input type="checkbox" id="showImageId" :checked="state.prefs.showImageId" @change="state.toggleShowImageId"  :disabled="!user">
+                    <label for="showImageId" class="hover:cursor-pointer" :class="{'disabled':!authed}">
+                        <input type="checkbox" id="showImageId" :checked="state.prefs.showImageId" @change="state.toggleShowImageId" :disabled="!authed">
                         <span>Show image ID</span>
                     </label>
                 </div>
 
                 <div class="field">
-                    <label for="showImageCameraInfo" class="hover:cursor-pointer" :class="{'disabled':!user}">
-                        <input type="checkbox" id="showImageCameraInfo" :checked="state.prefs.showCameraInfo" @change="state.toggleShowCameraInfo"  :disabled="!user">
+                    <label for="showImageCameraInfo" class="hover:cursor-pointer" :class="{'disabled':!authed}">
+                        <input type="checkbox" id="showImageCameraInfo" :checked="state.prefs.showCameraInfo" @change="state.toggleShowCameraInfo" :disabled="!authed">
                         <span>Show camera info</span>
                     </label>
                 </div>

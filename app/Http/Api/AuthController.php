@@ -16,7 +16,7 @@ class AuthController extends Controller
     public function isAuthed(Request $request): JsonResponse
     {
         return response()->json([
-            "authed" => $request->user() ?? FALSE,
+            "authed" => $request->user() ? TRUE : FALSE,
         ]);
     }
 }

@@ -30,6 +30,5 @@ Route::middleware(['throttle:images'])->group(function () {
 
 Route::group(["middleware" => "auth"], function () {
     Route::get('/auth/user', [AuthController::class, 'user']);
-
-    Route::get("/api/logout", function () { Auth::logout(); });
+    Route::get("/auth/logout", function () { Auth::logout(); });
 });
