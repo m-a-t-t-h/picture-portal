@@ -153,8 +153,12 @@ class ImageFilterService
                 'camera_model'          => $metadata?->model,
                 'camera_lens'           => $metadata?->lens,
                 'camera_aperture'       => $metadata?->aperture,
-                'camera_focalLength'    => $metadata?->focalLength,
+                'camera_focalLength'    => $metadata?->focalLength35,
+                'camera_shutter'        => $metadata?->exposureTime,
                 'camera_iso'            => $metadata?->sensitivity,
+                "camera_white_balance"  => $metadata?->whiteBalance,
+                "geo_lat"               => $image->imagePosition?->latitude,
+                "geo_long"              => $image->imagePosition?->longitude,
             ];
 
             if (isset($information) && isset($information->format)) {
@@ -225,7 +229,6 @@ class ImageFilterService
     protected function applyCollectionConstraint(Builder $query): Builder
     {
         $query->whereHas('imageAlbum.albumRoot', function ($query) {
-            \Log::debug("[" . config("dkw.ROOT_COLLECTION_ID") . "]");
             $query->where('id', $this->collection_id ?? config("dkw.ROOT_COLLECTION_ID"));
         });
 
@@ -234,6 +237,7 @@ class ImageFilterService
 
     protected function applyCameraConstraint(Builder $query): Builder
     {
+        //$this->camera_filter = ["NIKON CORPORATION"];
         if (!isset($this->camera_filter)) return $query;
 
         $query->whereHas("imageMetadata", function ($query) { $query->whereIn("make", $this->camera_filter); });

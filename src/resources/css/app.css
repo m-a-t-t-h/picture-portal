@@ -126,6 +126,7 @@
 
         .img_rating {
             @apply p-0;
+
             .img_rating_star {
                 @apply flex;
                 @apply bg-white/50 w-4 min-h-auto;
@@ -165,6 +166,13 @@
                     @apply hover:border-blue-500;
                 }
 
+                .camera-info {
+                    @apply -mt-12 h-12 z-20 w-full;
+                    @apply p-1 px-2;
+                    @apply bg-slate-50/70 backdrop-blur-xs shadow-[0px_0px_15px_#fff];
+                    @apply rounded-sm  relative inset-0   text-slate-700  text-xs;
+                }
+
                 img.format_img {
                     @apply min-h-96 max-h-96;
                     @apply transition-all duration-200;
@@ -176,7 +184,6 @@
         }
     }
 }
-
 .img_tags {
     @apply pt-2 flex flex-row flex-wrap  items-start;
 

@@ -3,6 +3,7 @@ import {useRoute} from "vue-router";
 import {useStateStore} from "../services/state.js";
 import {onMounted, reactive, ref} from "vue";
 import dayjs from 'dayjs';
+import { sprintf } from 'sprintf-js'
 
 const state = useStateStore();
 const route = useRoute();
@@ -78,27 +79,44 @@ function goBack() {
 
                     <div class="field">
                         <div class="label">Dimensions</div>
-                        <div class="value">{{ info.width }} x {{ info.height }} px</div>
+                        <div class="value">{{ photo.img_width }} x {{ photo.img_height }} px</div>
                     </div>
                     <div class="field">
                         <div class="label">Parameters</div>
-                        <div class="value">{{ info.sensitivity ? 'ISO ' + info.sensitivity : 'ISO Unknown' }}
-                            f{{ info.aperture ?? '' }}
+                        <div class="value">
+                            <div class="flex flex-row items-center justify-between">
+                                <div class="flex flex-row items-center" v-if="photo.camera_aperture">
+                                    f{{ photo.camera_aperture }}
+                                </div>
+
+                                <div class="flex flex-row items-center" v-if="photo.camera_shutter">
+                                    1/{{ sprintf("%0.0f", 1/photo.camera_shutter) }}s
+                                </div>
+
+                                <div class="flex flex-row items-center" v-if="photo.camera_iso">
+                                    ISO {{ photo.camera_iso }}
+                                </div>
+
+                                <div class="flex flex-row items-center" v-if="photo.camera_focalLength">
+                                    {{ photo.camera_focalLength}}mm
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                     <div class="field">
                         <div class="label">Camera</div>
-                        <div class="columns-2 value">{{ info.make ?? 'Unknown' }} {{ info.model ?? '' }}</div>
+                        <div class="columns-2 value">{{ photo.camera_make ?? 'Unknown' }} {{ photo.camera_model ?? '' }}</div>
                     </div>
                     <div class="field">
                         <div class="label">Lens</div>
-                        <div class="columns-2 value">{{ info.lens ?? 'Unknown' }}</div>
+                        <div class="columns-2 value">{{ photo.camera_lens ?? 'Unknown' }}</div>
                     </div>
                     <div class="field">
                         <div class="label">Location</div>
                         <div class="value">
-                            {{ info.latitudeNumber ? info.latitudeNumber + 'N' : 'Unknown' }}
-                            {{ info.longitudeNumber ? info.longitudeNumber + 'W' : info.latitudeNumber ? 'Unknown' : '' }}
+                            {{ photo.geo_lat ? photo.geo_lat : 'Unknown' }}
+                            {{ photo.geo_long ? photo.geo_long : '' }}
                         </div>
                     </div>
                     <div class="field">
