@@ -225,6 +225,7 @@ class ImageFilterService
     protected function applyCollectionConstraint(Builder $query): Builder
     {
         $query->whereHas('imageAlbum.albumRoot', function ($query) {
+            \Log::debug("[" . config("dkw.ROOT_COLLECTION_ID") . "]");
             $query->where('id', $this->collection_id ?? config("dkw.ROOT_COLLECTION_ID"));
         });
 
@@ -267,8 +268,6 @@ class ImageFilterService
 
         return $query;
     }
-
-
 
     /**
      * @param Builder $query

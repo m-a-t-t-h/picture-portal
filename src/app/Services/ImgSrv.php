@@ -37,6 +37,6 @@ SQL;
 
         $rst = DB::select($sql, [$hash]);
 
-        return $rst ? $rst[0]->img_path : "";
+        return $rst ? "/svr" . $root_collection_id . $rst[0]->img_path  : "";
     }
 }
