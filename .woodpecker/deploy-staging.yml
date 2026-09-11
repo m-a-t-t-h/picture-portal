@@ -51,7 +51,9 @@ steps:
 
 
   - name: upload_built_assets
-    when: [ evaluate: { "false" }]
+    when:
+      - evaluate: "false"
+
     depends_on: [ npm_build, clone_repo ]
     image: bash
 
@@ -71,7 +73,8 @@ steps:
 
 
   - name: composer_install
-    when: [ evaluate: { "false" }]
+    when:
+      - evaluate: "false"
 
     depends_on: [ clone_repo ]
     image: bash
@@ -90,7 +93,8 @@ steps:
 
 
   - name: bring_deployment_live
-    when: [ evaluate: { "false" }]
+    when:
+      - evaluate: "false"
 
     depends_on: [ composer_install, upload_built_assets ]
     image: bash
