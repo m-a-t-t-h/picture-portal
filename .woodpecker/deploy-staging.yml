@@ -8,6 +8,11 @@ when:
 
 steps:
 
+  - name: npm_build
+    image: bash
+    commands:
+      - docker run -v ".:/usr/src/app"  -w /usr/src/app/src -i node:24.11.1 sh -c "npm i && npm run build"
+
   - name: setup_environment
     image: bash
 
@@ -44,13 +49,6 @@ steps:
         && ln -s ../../../webserver/.env"
 
 
-  - name: npm_build
-    image: bash
-
-    commands:
-      - docker run -v ".:/usr/src/app"  -w /usr/src/app/src -i node:24.11.1 sh -c "npm i && npm run build"
-
-
   - name: upload_built_assets
     when: [{ evaluate: 'false' }]
     depends_on: [ npm_build, clone_repo ]
@@ -64,7 +62,8 @@ steps:
 
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-      - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
+      - ls -al
+#      - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
 
 
   - name: composer_install
