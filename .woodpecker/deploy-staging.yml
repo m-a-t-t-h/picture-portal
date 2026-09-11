@@ -25,8 +25,8 @@ steps:
             mkdir -p $DEPLOYMENT_PATH/staging/webserver"
 
   - name: clone_repo
+    depends_on: [ setup_environment ]
     image: bash
-    when: [{ evaluate: 'false' }]
 
     environment:
       SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
@@ -38,7 +38,7 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-        cd $DEPLOYMENT_PATH
+        cd $DEPLOYMENT_PATH/staging
         && git clone -b ${CI_COMMIT_BRANCH} --single-branch  $GITHUB_REPO deployments/deployment-${CI_PIPELINE_NUMBER}
         && cd deployments/deployment-${CI_PIPELINE_NUMBER}/src
         && ln -s ../../../webserver/.env"
