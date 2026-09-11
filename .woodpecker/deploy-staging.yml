@@ -61,8 +61,7 @@ steps:
 
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-      - ls -al
-#      - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
+      - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
 
 
   - name: composer_install
