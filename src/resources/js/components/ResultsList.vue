@@ -2,7 +2,9 @@
 import {onMounted, reactive, ref, toRaw} from 'vue';
 import {useStateStore} from "../services/state.js";
 import {useRouter} from "vue-router";
-import { sprintf } from 'sprintf-js'
+import MediaFactory from "./results/MediaFactory.vue";
+import MediaHeader from "./results/MediaHeader.vue";
+import MediaFooter from "./results/MediaFooter.vue";
 
 let resultsList = reactive([]);
 const state = useStateStore();
@@ -69,12 +71,6 @@ onMounted(() => {
     window.addEventListener('resize', checkVisibility);
     loadMore();
 });
-
-const imgClicked = function (photo) {
-    state.setSelectedPhoto(photo);
-    router.push("/dw/image/" + photo.img_hash + "/info");
-};
-
 </script>
 
 <template>
@@ -83,114 +79,9 @@ const imgClicked = function (photo) {
 
         <div v-if="resultsList.value" class="media-loop">
             <div class="wrapper" v-for="(photo, idx) in resultsList.value" :key="photo.id">
-                <div v-if="state.prefs.showFilename" class="iinfo filename">{{ photo.img_name }}</div>
-                <div v-if="state.prefs.showTimestamp" class="iinfo timestamp ">
-                    <div class="img_creation_date">{{ photo.img_creation_date }}</div>
-                    <div class="img_format">{{ photo.img_format }}</div>
-                </div>
-
-                <!-- media -->
-                <div class="media">
-                    <div v-if="photo.img_format==='MP4'">
-                        <video class="format_mp4" controls>
-                            <source :src="photo.img_path">
-                        </video>
-                    </div>
-                    <div v-else-if="photo.img_format==='MP3'" class="format_mp3" >
-                        <audio controls :src="photo.img_path"></audio>
-                    </div>
-                    <div class="img-container pink" v-else-if="photo.img_format==='JPG' || photo.img_format==='GIF' || photo.img_format==='PNG' || photo.img_format==='WEBP' || photo.img_format==='AVIF'" @click="imgClicked(photo)">
-                        <img :src="'/dw/imgsrv/thumb/' + photo.img_hash" :id="`img_${photo.img_id}`" class="format_img" loading="lazy" decoding="async" :alt="photo.img_path">
-                        <div v-if="state.prefs.showCameraInfo" class="camera-info">
-                            <div class="flex flex-row items-center">
-                                <div>{{ photo.camera_model }}</div>
-                            </div>
-                            <div class="flex flex-row items-center justify-between">
-                                <div class="flex flex-row items-center" v-if="photo.camera_aperture">
-                                    <img src="/svg/camera-fstop.svg" alt="Aperture" class="w-4 mr-1"/>
-                                    f{{ photo.camera_aperture }}
-                                </div>
-
-                                <div class="flex flex-row items-center" v-if="photo.camera_shutter">
-                                    <img src="/svg/camera-shutter.svg" alt="Shutter speed" class="w-4 mr-1"/>
-                                    1/{{ sprintf("%0.0f", 1/photo.camera_shutter) }}s
-                                </div>
-
-                                <div class="flex flex-row items-center" v-if="photo.camera_iso">
-                                    <img src="/svg/camera-iso.svg" alt="ISO" class="w-6 mr-1"/>
-                                    {{ photo.camera_iso }}
-                                </div>
-
-                                <div class="flex flex-row items-center" v-if="photo.camera_focalLength">
-                                    <img src="/svg/camera-focallength.svg" alt="focal length" class="w-6 mr-1"/>
-                                    {{ photo.camera_focalLength }}mm
-                                </div>
-                            </div>
-                        </div>
-                        <div v-if="state.prefs.showRating" class="iinfo img_rating">
-                            <div class="img_rating_star" v-if="photo.img_rating===1">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                            </div>
-                            <div class="img_rating_star" v-else-if="photo.img_rating===2">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                            </div>
-                            <div class="img_rating_star" v-else-if="photo.img_rating===3">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                            </div>
-                            <div class="img_rating_star" v-else-if="photo.img_rating===4">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                            </div>
-                            <div class="img_rating_star" v-else-if="photo.img_rating===5">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-filled.svg" alt="1 star rating">
-                            </div>
-                            <div class="img_rating_star" v-else>
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                                <img class="img_rating_star_filled" src="/svg/star-empty.svg" alt="1 star rating">
-                            </div>
-                        </div>
-                    </div>
-                    <div v-else>
-                        <div class="">{{ photo.img_format }} is not yet supported</div>
-                    </div>
-                </div>
-                <!-- /media -->
-
-                <div v-if="state.prefs.showTagsBelow" class="iinfo img_tags">
-                    <div v-for="(item) in photo.tags" :key="item" class="img_tag">
-                        <span class="img_tag_name">#{{ item[1] }}</span>
-                        <span class="img_tag_id" v-if="state.prefs.showTagId">({{ item.id }})</span>
-                    </div>
-                </div>
-                <div v-if="state.prefs.showPath" class="iinfo">
-                    {{ photo.img_path }}
-                </div>
-                <div v-if="state.prefs.showImageId" class="iinfo img_id">
-                    #{{ photo.img_id }}
-                </div>
-
+                <MediaHeader :photo="photo"></MediaHeader>
+                <MediaFactory :photo="photo"></MediaFactory>
+                <MediaFooter :photo="photo"></MediaFooter>
                 <div v-if="idx===(resultsList.value.length - 5)" ref="sentinel" id="sentinel"></div>
             </div>
         </div>
@@ -201,3 +92,36 @@ const imgClicked = function (photo) {
         </div>
     </div>
 </template>
+
+<style scoped>
+@reference "tailwindcss";
+
+.wrapper {
+    @apply flex flex-col justify-between ;
+    @apply m-0.5 my-1  w-full;
+    @apply bg-slate-50 border border-slate-300 rounded-md;
+
+    .iinfo {
+        @apply z-0;
+        @apply min-h-6 p-1 h-auto;
+        @apply flex flex-row items-center mb-1;
+        @apply overflow-hidden;
+    }
+
+
+
+    .img_rating {
+        @apply p-0;
+
+        .img_rating_star {
+            @apply flex;
+            @apply bg-white/50 w-4 min-h-auto;
+        }
+    }
+
+    .img_id {
+        @apply w-full justify-end flex;
+    }
+}
+
+</style>
