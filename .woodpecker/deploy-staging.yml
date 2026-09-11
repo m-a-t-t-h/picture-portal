@@ -8,7 +8,6 @@ when:
 
 steps:
 
-
   - name: setup_environment
     image: bash
 
@@ -21,10 +20,9 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-            echo '$DEPLOYMENT_PATH/staging' > /var/www/domains/webdevops.uk/dest.txt"
-            #mkdir -p $DEPLOYMENT_PATH/staging &&
-            #mkdir -p $DEPLOYMENT_PATH/staging/deployments &&
-            #mkdir -p $DEPLOYMENT_PATH/staging/webserver
+            mkdir -p $DEPLOYMENT_PATH/staging &&
+            mkdir -p $DEPLOYMENT_PATH/staging/deployments &&
+            mkdir -p $DEPLOYMENT_PATH/staging/webserver"
 
   - name: clone_repo
     image: bash
