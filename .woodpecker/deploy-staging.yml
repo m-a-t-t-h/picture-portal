@@ -49,7 +49,6 @@ steps:
         && cd deployments/deployment-${CI_PIPELINE_NUMBER}/src
         && ln -s ../../../webserver/.env"
 
-
   - name: upload_built_assets
     when:
       - evaluate: "false"
@@ -71,7 +70,6 @@ steps:
       - ls -al src/public/build
       - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
 
-
   - name: composer_install
     when:
       - evaluate: "false"
@@ -90,7 +88,6 @@ steps:
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
         cd $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src
         && composer install"
-
 
   - name: bring_deployment_live
     when:
