@@ -1,6 +1,7 @@
 <?php namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ImgSrv
 {
@@ -36,7 +37,10 @@ SELECT img_path FROM q2 WHERE img_hash=?
 SQL;
 
         $rst = DB::select($sql, [$hash]);
+        $ret = $rst ? "/svr" . $root_collection_id . $rst[0]->img_path : "";
 
-        return $rst ? "/svr" . $root_collection_id . $rst[0]->img_path  : "";
+        Log::debug("Resolved hash to $ret");
+        return $ret;
+
     }
 }
