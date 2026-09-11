@@ -45,8 +45,6 @@ steps:
 
 
   - name: npm_build
-    when: [{ evaluate: 'false' }]
-    depends_on: [ clone_repo ]
     image: bash
 
     commands:
@@ -55,7 +53,7 @@ steps:
 
   - name: upload_built_assets
     when: [{ evaluate: 'false' }]
-    depends_on: [ npm_build ]
+    depends_on: [ npm_build, clone_repo ]
     image: bash
 
     environment:
