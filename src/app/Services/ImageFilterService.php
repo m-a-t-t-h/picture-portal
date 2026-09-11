@@ -240,17 +240,20 @@ class ImageFilterService
 
     protected function applyCameraConstraint(Builder $query): Builder
     {
-        //$this->camera_filter = ["NIKON CORPORATION"];
         if (!isset($this->camera_filter)) return $query;
 
-        $query->whereHas("imageMetadata", function ($query) { $query->whereIn("make", $this->camera_filter); });
+        $query->whereHas("imageMetadata", function ($query) {
+            $query->whereIn("make", $this->camera_filter);
+        });
 
         return $query;
     }
 
     protected function applyImageFormatConstraint(Builder $query): Builder
     {
-        $query->whereHas('imageInformation', function ($query) { $query->where('format', '<>', 'RAW-NEF'); });
+        $query->whereHas('imageInformation', function ($query) {
+            $query->whereNotIn('format', ['RAW-NEF', 'RAW-DNG']);
+        });
 
         return $query;
     }

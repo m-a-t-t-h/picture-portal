@@ -21,9 +21,9 @@ class ImageFilterResultsTest extends TestCase
         $results = $service->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(4, $results);
+        self::assertCount(2, $results);
 
         self::assertNotNull($results[0]["img_id"]);
-        self::assertEquals("Cars,Qashqai", implode(",", array_column($results[0]["tags"], 1)));
+        self::assertEquals("Redcar,Cars,Qashqai", implode(",", array_column($results[0]["tags"], 1)));
     }
 }
