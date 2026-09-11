@@ -61,6 +61,10 @@ steps:
 
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - ls -al
+      - ls -al src
+      - ls -al src/public
+      - ls -al src/public/buo;d
       - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
 
 
