@@ -65,7 +65,6 @@ steps:
 
 
   - name: composer_install
-    when: [{ evaluate: 'false' }]
     depends_on: [ clone_repo ]
     image: bash
 
@@ -78,7 +77,7 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-        cd $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/src
+        cd $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src
         && composer install"
 
 
