@@ -18,16 +18,13 @@ steps:
       TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
       DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
 
-
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-            echo "$DEPLOYMENT_PATH/staging > /var/www/domains/webdevops.uk/dest.txt
+            echo "$DEPLOYMENT_PATH/staging > /var/www/domains/webdevops.uk/dest.txt"
             #mkdir -p $DEPLOYMENT_PATH/staging &&
             #mkdir -p $DEPLOYMENT_PATH/staging/deployments &&
             #mkdir -p $DEPLOYMENT_PATH/staging/webserver
-        "
-
 
   - name: clone_repo
     image: bash
