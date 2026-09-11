@@ -50,8 +50,6 @@ steps:
         && ln -s ../../../webserver/.env"
 
   - name: upload_built_assets
-    when:
-      - evaluate: "false"
 
     depends_on: [ npm_build, clone_repo ]
     image: bash
@@ -71,8 +69,6 @@ steps:
       - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
 
   - name: composer_install
-    when:
-      - evaluate: "false"
 
     depends_on: [ clone_repo ]
     image: bash
@@ -90,8 +86,6 @@ steps:
         && composer install"
 
   - name: bring_deployment_live
-    when:
-      - evaluate: "false"
 
     depends_on: [ composer_install, upload_built_assets ]
     image: bash
@@ -107,6 +101,6 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo chown www-data:www-data $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R"
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $IMAGE_MOUNTPOINT $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/images"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $IMAGE_MOUNTPOINT/ $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/images/"
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo rm -f $DEPLOYMENT_PATH/staging/live && sudo ln -s $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src $DEPLOYMENT_PATH/staging/live"
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo service nginx restart"
