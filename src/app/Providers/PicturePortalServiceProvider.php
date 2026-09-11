@@ -22,7 +22,6 @@ class PicturePortalServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton('glide.server', function () {
-
             return ServerFactory::create([
                 'source'         => Storage::disk('images_source')->getDriver(),
                 'cache'          => Storage::disk('glide_cache')->getDriver(),

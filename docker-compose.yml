@@ -27,7 +27,7 @@ services:
     volumes:
       - ./src:/var/www/html
       - /home/matth/mnt/nfs/pve/dir02:/var/www/html/storage/app/images/svr9
-      - /home/matth/mnt/nfs/pve/Main:/var/www/html/storage/app/images/svr5
+      - /home/matth/mnt/nfs/pve/Main/Photos:/var/www/html/storage/app/images/svr5
     links:
       - backend
 
@@ -41,8 +41,8 @@ services:
     ports:
       - "5173:5173"
     env_file: "src/.env"
-#    environment:
-#      CHOKIDAR_USEPOLLING: "true"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
     volumes:
       - ./src:/var/www/html
 

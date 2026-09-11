@@ -5,6 +5,21 @@ use Illuminate\Support\Facades\Log;
 
 class ImgSrv
 {
+    public static function getImageByHash(string $hash) {
+        $path = ImgSrv::hashToPath($hash);
+        $response = app('glide.server')->getImageResponse($path, ["w" => 1280]);
+
+        return $response;
+    }
+
+    public static function getThumbnailByHash(string $hash) {
+        $path = ImgSrv::hashToPath($hash);
+        Log::debug($path);
+        $response = app('glide.server')->getImageResponse($path, ["h" => 400]);
+
+        return $response;
+    }
+
     /**
      * Resolve a SHA256 hash of the image path back to the image path
      *
@@ -38,8 +53,6 @@ SQL;
 
         $rst = DB::select($sql, [$hash]);
         $ret = $rst ? "/svr" . $root_collection_id . $rst[0]->img_path : "";
-
-        Log::debug("Resolved hash to $ret");
         return $ret;
 
     }

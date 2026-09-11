@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Controller;
 use App\Services\ImgSrv;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ImgSrvController extends Controller
 {
@@ -15,15 +17,15 @@ class ImgSrvController extends Controller
      * @todo Return placeholder image when not found
      */
 
-    public function getThumbnail($hash)
+    public function getThumbnail(string $hash): string
     {
         try {
-            $response = app('glide.server')->getImageResponse(ImgSrv::hashToPath($hash), ["h" => 400]);
-
-            return $response;
+            return ImgSrv::getThumbnailByHash($hash);
         }
         catch (\Exception $e) {
-            \Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+            Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+
+            return "";
         }
     }
 
@@ -36,16 +38,16 @@ class ImgSrvController extends Controller
      *
      * @todo Return placeholder image when not found
      */
-    public function getImage(string $hash)
+    public function getImage(string $hash): string
     {
         try {
-            $response = app('glide.server')->getImageResponse(ImgSrv::hashToPath($hash), ["w" => 1280]);
-
-            return $response;
+            return ImgSrv::getImageByHash($hash);
         }
         catch (\Exception $e) {
-            \Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+            Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
         }
+
+        return "";
     }
 
     /**
@@ -67,7 +69,7 @@ LEFT JOIN ImagePositions   LL ON LL.imageid=Images.id
 WHERE Images.id=?
 SQL;
 
-        $rst = \DB::select($sql, [$img_id]);
+        $rst = DB::select($sql, [$img_id]);
 
         return response()->json($rst);
     }
