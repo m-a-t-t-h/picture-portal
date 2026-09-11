@@ -39,8 +39,8 @@ steps:
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
         cd $DEPLOYMENT_PATH
         && git clone -b ${CI_COMMIT_BRANCH} --single-branch  $GITHUB_REPO deployments/deployment-${CI_PIPELINE_NUMBER}
-        && cd deployments/deployment-${CI_PIPELINE_NUMBER}
-        && ln -s ../../webserver/.env"
+        && cd deployments/deployment-${CI_PIPELINE_NUMBER}/src
+        && ln -s ../../../webserver/.env"
 
 
   - name: npm_build
@@ -48,7 +48,7 @@ steps:
     image: bash
 
     commands:
-      - docker run -v ".:/usr/src/app"  -w /usr/src/app -i node:24.11.1 sh -c "npm i && npm run build"
+      - docker run -v ".:/usr/src/app"  -w /usr/src/app/src -i node:24.11.1 sh -c "npm i && npm run build"
 
 
   - name: upload_built_assets
@@ -79,7 +79,7 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-        cd $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}
+        cd $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/src
         && composer install"
 
 
@@ -98,6 +98,6 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo chown www-data:www-data $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R"
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $IMAGE_MOUNTPOINT $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/public/images"
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo rm -f $DEPLOYMENT_PATH/live && sudo ln -s $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER} $DEPLOYMENT_PATH/live"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $IMAGE_MOUNTPOINT $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/images"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo rm -f $DEPLOYMENT_PATH/live && sudo ln -s $DEPLOYMENT_PATH/deployments/deployment-${CI_PIPELINE_NUMBER}/src $DEPLOYMENT_PATH/live"
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo service nginx restart"
