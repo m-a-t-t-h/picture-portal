@@ -8,6 +8,7 @@ when:
 
 steps:
 
+
   - name: setup_environment
     image: bash
 
