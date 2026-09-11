@@ -2,9 +2,6 @@ when:
   - event: push
     evaluate: '(CI_COMMIT_MESSAGE contains "[#staging]")'
 
-  - event: push
-    branch: main
-
 steps:
 
   - name: setup_environment
@@ -19,13 +16,14 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-        mkdir -p $DEPLOYMENT_PATH &&
-        mkdir -p $DEPLOYMENT_PATH/deployments &&
-        mkdir -p $DEPLOYMENT_PATH/webserver"
+        mkdir -p $DEPLOYMENT_PATH/staging &&
+        mkdir -p $DEPLOYMENT_PATH/staging/deployments &&
+        mkdir -p $DEPLOYMENT_PATH/staging/webserver"
 
 
   - name: clone_repo
     image: bash
+    when: [{ evaluate: 'false' }]
 
     environment:
       SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
@@ -44,6 +42,7 @@ steps:
 
 
   - name: npm_build
+    when: [{ evaluate: 'false' }]
     depends_on: [ clone_repo ]
     image: bash
 
@@ -52,6 +51,7 @@ steps:
 
 
   - name: upload_built_assets
+    when: [{ evaluate: 'false' }]
     depends_on: [ npm_build ]
     image: bash
 
@@ -67,6 +67,7 @@ steps:
 
 
   - name: composer_install
+    when: [{ evaluate: 'false' }]
     depends_on: [ clone_repo ]
     image: bash
 
@@ -84,6 +85,7 @@ steps:
 
 
   - name: bring_deployment_live
+    when: [{ evaluate: 'false' }]
     depends_on: [ composer_install, upload_built_assets ]
     image: bash
 
