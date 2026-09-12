@@ -22,8 +22,6 @@ trait ImageQueryMiddleware
 
     public function prepareRawQuery(): self
     {
-        Log::debug(__METHOD__);
-
         $page_size = config("dkw.PAGE_SIZE");
         $page      = $this->page * $page_size;
 
@@ -123,14 +121,12 @@ LIMIT $page, $page_size
 SQL;
         $this->raw_sql = $sql;
 
-        \Log::debug($sql);
-
         return $this;
     }
 
     public function runQuery()
     {
-        $this->raw_query_results = \DB::select($this->raw_sql);
+        $this->raw_query_results = DB::select($this->raw_sql);
         Log::debug(count($this->raw_query_results) . " raw results");
 
         return $this;

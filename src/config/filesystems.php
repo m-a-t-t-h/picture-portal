@@ -30,8 +30,7 @@ return [
 
     'disks' => [
 
-
-        'images_source' => [
+        'pictureportal_source' => [
             'driver' => 'local',
             'root'   => storage_path('app/images'),
         ],
