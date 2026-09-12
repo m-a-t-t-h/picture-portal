@@ -22,13 +22,17 @@ class PicturePortalServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton('glide.server', function () {
-
-            return ServerFactory::create([
-                'source'         => Storage::disk('images_source')->getDriver(),
+            $server = ServerFactory::create([
+                'source'         => Storage::disk('pictureportal_source')->getDriver(),
                 'cache'          => Storage::disk('glide_cache')->getDriver(),
                 'max_image_size' => 2000 * 2000,
                 'response'       => new SymfonyResponseFactory(app('request')),
             ]);
+
+            $server->setBaseUrl("/");
+            //$server->setSourcePathPrefix("/var/www/html/storage/app/images");
+
+            return $server;
         });
     }
 }
