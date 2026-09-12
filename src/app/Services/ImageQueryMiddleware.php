@@ -18,8 +18,6 @@ trait ImageQueryMiddleware
         return $this;
     }
 
-
-
     public function prepareRawQuery(): self
     {
         $page_size = config("dkw.PAGE_SIZE");

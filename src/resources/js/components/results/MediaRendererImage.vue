@@ -67,8 +67,13 @@ const imgClicked = function (photo) {
     }
 
     .format_square2 {
-        @apply bg-red-500 w-100 max-h-100;
+        @apply w-100 max-h-100;
         @apply object-cover;
+        @apply rounded;
+
+        @apply  border-2 border-transparent;
+        @apply hover:border-blue-500 hover:shadow-[0_0_8px_rgb(0,0,0)];
+        @apply hover:cursor-pointer;
     }
 
     .camera-info {

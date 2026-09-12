@@ -77,7 +77,7 @@ onMounted(() => {
     <div class="bg-white">
         <div class="shield fixed top-0 left-0 w-full h-full bg-white/90 z-10" v-if="showShield"></div>
 
-        <div v-if="resultsList.value" class="media-loop">
+        <div v-if="resultsList.value" class="media-loop gap-2 gap-y-0">
             <div class="wrapper" v-for="(photo, idx) in resultsList.value" :key="photo.id">
                 <MediaHeader :photo="photo"></MediaHeader>
                 <MediaFactory :photo="photo"></MediaFactory>
