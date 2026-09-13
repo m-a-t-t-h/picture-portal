@@ -42,12 +42,13 @@ const orderByOptions = [
     {label: 'Random', value: '7'},
     {label: 'Rating (asc)', value: '8'},
     {label: 'Rating (desc)', value: '9'},
+    {label: 'Newest', value: '5'},
+    {label: 'Oldest', value: '6'},
     {label: 'ID (asc)', value: '1'},
     {label: 'ID (desc)', value: '2'},
     {label: 'Filename (asc)', value: '3'},
     {label: 'Filename (desc)', value: '4'},
-    {label: 'Digitization date (asc)', value: '5'},
-    {label: 'Digitization date (desc)', value: '6'},
+
 ];
 
 onMounted(async () => {
@@ -86,7 +87,7 @@ watch(orderBy, async () => {
                     <button @click="selectedOnly" class="ikon ikon-wb">
                         <img src="/svg/checkbox-checked.svg" alt="Show selected only"></button>
                     <button @click="collapseAll" class="ikon ikon-wb">
-                        <img src="/svg/minimise.svg" c alt="Collapse all open nodes"></button>
+                        <img src="/svg/minimise.svg" alt="Collapse all open nodes"></button>
                     <button @click="clearFilter" class="ikon ikon-wb"><img src="/svg/trashcan.svg"  alt="Reset filter">
                     </button>
 
@@ -104,7 +105,7 @@ watch(orderBy, async () => {
                    @checked-change="handleCheckedChange"
                    checkable animation :cascade="false">
                 <template #node="{ node }">
-                    <span :style="{ }">{{ node.title }}</span>
+                    <span :style="{ }">{{ node.title }} ({{node.id}})</span>
                 </template>
             </VTree>
         </div>

@@ -1,9 +1,9 @@
 <script setup>
+import {ref} from "vue";
 import {useStateStore} from "../services/state.js";
 import SidePanel from "../components/SidePanel.vue";
 import SettingsPanel from "../panels/SettingsPanel.vue";
 import FilterPanel from "../panels/FilterPanel.vue";
-import {ref} from "vue";
 import MainMenuPanel from "../panels/MainMenuPanel.vue";
 
 const state = useStateStore();

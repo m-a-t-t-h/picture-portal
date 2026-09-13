@@ -10,7 +10,7 @@ const state = useStateStore();
 
 <template>
     <div v-if="state.prefs.showFilename" class="media-filename">
-        {{ photo.img_name }}
+        <div class="inner">{{ photo.img_name }}</div>
     </div>
 </template>
 
@@ -18,8 +18,12 @@ const state = useStateStore();
 @reference "tailwindcss";
 
 .media-filename {
-    @apply p-1;
-    @apply text-sm;
-    @apply whitespace-nowrap;
+    @apply text-sm pl-1;
+    @apply whitespace-nowrap overflow-hidden;
+    @apply border border-t-0 border-l-0;
+    @apply border-slate-200 shadow-sm;
+
+    .inner {
+    }
 }
 </style>

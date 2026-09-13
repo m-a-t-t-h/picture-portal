@@ -1,7 +1,6 @@
 <script setup>
 import {useStateStore} from "../../services/state.js";
 import MediaFilename from "./MediaFilename.vue";
-import MediaTimestamp from "./MediaTimestamp.vue";
 
 defineProps({
     photo: Object,
@@ -13,7 +12,6 @@ const state = useStateStore();
 <template>
     <div class="media-header">
         <MediaFilename :photo="photo"></MediaFilename>
-        <MediaTimestamp :photo="photo"></MediaTimestamp>
     </div>
 </template>
 

@@ -2,9 +2,17 @@ import {createApp} from "vue";
 import {createPinia} from "pinia";
 import {createPersistedState} from "pinia-plugin-persistedstate";
 import {createRouter, createWebHistory} from "vue-router";
+import {useStateStore} from "./services/state.js";
+
 import AppWrapper from "./layouts/AppWrapper.vue";
 import MainLayout from "./layouts/MainLayout.vue";
-import {useStateStore} from "./services/state.js";
+import HomeView from "./pages/HomeView.vue";
+import HomeHeader from "./pages/HomeHeader.vue";
+import Footer from "./components/Footer.vue";
+import ImageView from "./pages/ImageView.vue";
+import LogoutComponent from "./components/LogoutComponent.vue";
+
+console.log("Booting");
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,20 +24,20 @@ const router = createRouter({
                 {
                     path: '',
                     components: {
-                        default: () => import("./pages/HomeView.vue"),
-                        header: () => import("./pages/HomeHeader.vue"),
-                        footer: () => import("./components/Footer.vue")
+                        default: () => HomeView,
+                        header: () => HomeHeader,
+                        footer: () => Footer
                     }
                 }, {
                     path: 'image/:img_hash/info',
                     components: {
-                        default: () => import("./pages/ImageView.vue"),
+                        default: () => ImageView,
                     }
                 },
                 {
                     path: "logout",
                     components: {
-                        default: () => import("./components/LogoutComponent.vue")
+                        default: () => LogoutComponent
                     }
                 }
             ]
@@ -50,7 +58,7 @@ const router = createRouter({
     },
 });
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async () => {
     const state = useStateStore();
     const response = await fetch('/dw/auth/authed', {credentials: 'same-origin', headers: {Accept: 'application/json'}})
 

@@ -4,7 +4,6 @@ use App\Http\Controllers\Controller;
 use App\Services\AuthService;
 use App\Services\ImageFilterService;
 use App\Services\ImageQueryMiddleware;
-use Log;
 
 class FilterController extends Controller
 {
@@ -35,7 +34,6 @@ class FilterController extends Controller
 
         if (count($tag_filter)) {
             $results = (new ImageFilterService())
-                ->setCollectionId(config("dkw.ROOT_COLLECTION_ID"))
                 ->setPageSize(config("dkw.PAGE_SIZE"))
                 ->setPage($page)
                 ->setTagFilter($tag_filter)

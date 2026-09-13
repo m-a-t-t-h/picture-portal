@@ -17,15 +17,15 @@ class ImgSrvController extends Controller
      * @todo Return placeholder image when not found
      */
 
-    public function getThumbnail(string $hash): string
+    public function getThumbnail(string $hash)
     {
         try {
-            return ImgSrv::getThumbnailByHash($hash);
+            ImgSrv::getThumbnailByHash($hash);
         }
         catch (\Exception $e) {
             Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
 
-            return "";
+            return config("dkw.APP_DEBUG") ? $e->getMessage() : "";
         }
     }
 

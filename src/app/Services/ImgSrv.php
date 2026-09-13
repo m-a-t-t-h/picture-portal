@@ -1,6 +1,7 @@
 <?php namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ImgSrv
 {
@@ -17,7 +18,19 @@ class ImgSrv
         /** @var \League\Glide\Server $server */
         $server = app("glide.server");
         $path   = ImgSrv::hashToPath($hash);
-        $server->outputImage($path, ["h" => 400]);
+
+        try {
+            //ob_start();
+            $server->outputImage($path, ["h" => 400]);
+            //ob_end_clean();
+        }
+        catch (\Exception $e) {
+            Log::debug("E");
+        }
+        catch (\Throwable $e) {
+            Log::debug("T");
+        }
+        //return $server->getImageResponse($path, ["h"=>400]);
     }
 
     /**

@@ -19,7 +19,7 @@ const state = useStateStore();
 @reference "tailwindcss";
 
 .media-timestamp {
-    @apply p-1;
+    @apply p-1 pt-2;
     @apply flex flex-row justify-between;
     @apply text-slate-500 text-xs;
 }

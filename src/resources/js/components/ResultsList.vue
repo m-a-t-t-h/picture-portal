@@ -77,7 +77,7 @@ onMounted(() => {
     <div class="bg-white">
         <div class="shield fixed top-0 left-0 w-full h-full bg-white/90 z-10" v-if="showShield"></div>
 
-        <div v-if="resultsList.value" class="media-loop gap-2 gap-y-0">
+        <div v-if="resultsList.value" class="media-loop gap-1">
             <div class="wrapper" v-for="(photo, idx) in resultsList.value" :key="photo.id">
                 <MediaHeader :photo="photo"></MediaHeader>
                 <MediaFactory :photo="photo"></MediaFactory>
@@ -97,18 +97,9 @@ onMounted(() => {
 @reference "tailwindcss";
 
 .wrapper {
-    @apply flex flex-col justify-between ;
-    @apply m-0.5 my-1  w-full;
+    @apply flex flex-col ;
+    @apply  w-full;
     @apply bg-slate-50 border border-slate-300 rounded-md;
-
-    .iinfo {
-        @apply z-0;
-        @apply min-h-6 p-1 h-auto;
-        @apply flex flex-row items-center mb-1;
-        @apply overflow-hidden;
-    }
-
-
 
     .img_rating {
         @apply p-0;

@@ -9,7 +9,7 @@ const state = useStateStore();
 </script>
 
 <template>
-    <div v-if="state.prefs.showTagsBelow" class="iinfo img_tags">
+    <div v-if="state.prefs.showTagsBelow" class="img_tags">
         <div v-for="(item) in photo.tags" :key="item" class="img_tag">
             <span class="img_tag_name">#{{ item[1] }}</span>
             <span class="img_tag_id" v-if="state.prefs.showTagId">({{ item.id }})</span>
@@ -21,7 +21,11 @@ const state = useStateStore();
 @reference "tailwindcss";
 
 .img_tags {
-    @apply p-0 m-0;
+    @apply flex flex-row flex-wrap  items-start;
+
+    .img_tag {
+        @apply text-xs border-amber-50 border rounded bg-amber-100  p-1 mr-1;
+    }
 }
 
 </style>
