@@ -13,6 +13,8 @@ steps:
     image: bash
     commands:
       - docker run -v ".:/usr/src/app"  -w /usr/src/app/src -i node:24.11.1 sh -c "npm i && npm run build"
+      - pwd
+      - ls -al
       - ls -al /usr/src/app/src/
       - ls -al /usr/src/app/src/public
       - ls -al /usr/src/app/src/public/build
