@@ -24,20 +24,20 @@ const router = createRouter({
                 {
                     path: '',
                     components: {
-                        default: () => HomeView,
-                        header: () => HomeHeader,
-                        footer: () => Footer
+                        default:  HomeView,
+                        header:  HomeHeader,
+                        footer:  Footer
                     }
                 }, {
                     path: 'image/:img_hash/info',
                     components: {
-                        default: () => ImageView,
+                        default: ImageView,
                     }
                 },
                 {
                     path: "logout",
                     components: {
-                        default: () => LogoutComponent
+                        default: LogoutComponent
                     }
                 }
             ]
