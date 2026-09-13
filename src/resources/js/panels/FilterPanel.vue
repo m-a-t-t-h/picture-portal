@@ -105,7 +105,7 @@ watch(orderBy, async () => {
                    @checked-change="handleCheckedChange"
                    checkable animation :cascade="false">
                 <template #node="{ node }">
-                    <span :style="{ }">{{ node.title }} ({{node.id}})</span>
+                    <span :style="{ }">{{ node.title }} </span>
                 </template>
             </VTree>
         </div>
