@@ -16,12 +16,13 @@ class ImgSrv
     public static function getThumbnailByHash(string $hash)
     {
         /** @var \League\Glide\Server $server */
-        $server = app("glide.server");
-        $path   = ImgSrv::hashToPath($hash);
 
-        Log::debug("Returning path: [$path]");
 
         try {
+            $server = app("glide.server");
+            $path   = ImgSrv::hashToPath($hash);
+            Log::debug("Returning path: [$path]");
+
             $server->outputImage($path, ["h" => 400]);
         }
         catch (\Exception $e) {
@@ -61,6 +62,14 @@ SQL;
 
         $rst  = DB::select($sql, [$hash]);
         $path = $rst ? "col" . $root_collection_id . $rst[0]->img_path : "";
+
+        $strip = config("dkw.IMAGE_URL_PREFIX_STRIP");
+        if ($strip) {
+            Log::debug("Prefix stripping:");
+            Log::debug("  From: $path");
+            $path = str_replace($strip, "", $path);
+            Log::debug("    To: $path");
+        }
 
         return $path;
     }

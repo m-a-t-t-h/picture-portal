@@ -35,7 +35,12 @@ return [
             'root'   => storage_path('app/images'),
         ],
 
-        'glide_cache' => [
+        "glide_local_cache" => [
+            "driver" => "local",
+            "root"   => storage_path("app/glide-cache"),
+        ],
+
+        'glide_s3_cache' => [
             'driver'                  => 's3',
             'endpoint'                => env('AWS_ENDPOINT'),
             'url'                     => env('AWS_URL'),
@@ -48,8 +53,8 @@ return [
             'bucket'                  => env('AWS_BUCKET'),
             'throw'                   => FALSE,
             'root'                    => 'dkw',
-            'http' => [
-                'verify' => false,
+            'http'                    => [
+                'verify' => FALSE,
             ],
 
         ],
