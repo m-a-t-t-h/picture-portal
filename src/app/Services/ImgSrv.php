@@ -19,10 +19,10 @@ class ImgSrv
         $server = app("glide.server");
         $path   = ImgSrv::hashToPath($hash);
 
+        \Log::debug("Returning path: [$path]");
+
         try {
-            //ob_start();
             $server->outputImage($path, ["h" => 400]);
-            //ob_end_clean();
         }
         catch (\Exception $e) {
             Log::debug("E");

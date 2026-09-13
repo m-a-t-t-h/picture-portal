@@ -12,8 +12,6 @@ import Footer from "./components/Footer.vue";
 import ImageView from "./pages/ImageView.vue";
 import LogoutComponent from "./components/LogoutComponent.vue";
 
-console.log("Booting");
-
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -24,9 +22,9 @@ const router = createRouter({
                 {
                     path: '',
                     components: {
-                        default:  HomeView,
-                        header:  HomeHeader,
-                        footer:  Footer
+                        default: HomeView,
+                        header: HomeHeader,
+                        footer: Footer
                     }
                 }, {
                     path: 'image/:img_hash/info',
