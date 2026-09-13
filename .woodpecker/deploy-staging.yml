@@ -86,7 +86,7 @@ steps:
 
   - name: bring_deployment_live
 
-    depends_on: [ composer_install, upload_built_assets ]
+    depends_on: [ composer_install ]
     image: bash
 
     environment:
