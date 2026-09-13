@@ -9,6 +9,10 @@ when:
 
 steps:
 
+  - name: npm_build
+    image: bash
+    commands:
+      - docker run -v ".:/usr/src/app"  -w /usr/src/app/src -i node:24.11.1 sh -c "npm i && npm run build"
 
 
   - name: setup_environment
@@ -46,11 +50,6 @@ steps:
         && cd deployments/deployment-${CI_PIPELINE_NUMBER}/src
         && ln -s ../../../webserver/.env"
 
-  - name: npm_build
-    depends_on: [ clone_repo ]
-    image: bash
-    commands:
-      - docker run -v ".:/usr/src/app"  -w /usr/src/app/src -i node:24.11.1 sh -c "npm i && npm run build"
 
   - name: upload_built_assets
 
@@ -65,10 +64,6 @@ steps:
 
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-      - ls -al
-      - ls -al src
-      - ls -al src/public
-      - ls -al src/public/build
       - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
 
   - name: composer_install
@@ -106,5 +101,4 @@ steps:
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo chown www-data:www-data $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R"
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $IMAGE_MOUNTPOINT $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/storage/app/images"
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/storage/app/images $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/images"
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo rm -f $DEPLOYMENT_PATH/staging/live && sudo ln -s $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src $DEPLOYMENT_PATH/staging/live"
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo service nginx restart"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo rm -f $DEPLOYMENT_PATH/staging/live && sudo ln -s $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src $DEPLOYMENT_PATH/staging/live && sudo service nginx restart"
