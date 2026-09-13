@@ -7,7 +7,7 @@ class AuthService
     public static function isPublicEnforced()
     {
         switch (config("dkw.REQUIRE_PUBLIC_TAG")) {
-            case "always":
+            case "always":case 1:
                 return TRUE;
 
             case "unauthed":

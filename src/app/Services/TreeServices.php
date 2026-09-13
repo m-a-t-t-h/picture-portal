@@ -3,7 +3,8 @@
 namespace App\Services;
 
 use App\Models\Tags;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TreeServices
 {
@@ -11,7 +12,6 @@ class TreeServices
     {
         $root_ids = json_decode(config("dkw.ROOT_TAG_ARRAY"), TRUE);
         $tree     = [];
-        \Log::debug($root_ids);
 
         foreach ($root_ids as $root_tag_id => $tag_label) {
             $children = Tags::createTreeDownwards($root_tag_id);

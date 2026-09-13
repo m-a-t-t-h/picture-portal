@@ -13,8 +13,6 @@ Auth::routes();
 // ---- Public facing routes, no auth middleware
 //
 //
-
-
 Route::middleware(['throttle:images'])->group(function () {
     Route::redirect("/", "/dw");
     Route::get('/dw', [AppController::class, "get"]);
@@ -25,7 +23,6 @@ Route::middleware(['throttle:images'])->group(function () {
     Route::get('/dw/imgsrv/thumb/{hash}', [ImgSrvController::class, "getThumbnail"])->where('hash', '.*');
     Route::get('/dw/imgsrv/full/{hash}', [ImgSrvController::class, "getImage"])->where('hash', '.*');
     Route::get('/dw/{any?}', [AppController::class, "get"])->where('any', '.*');
-
 });
 
 Route::group(["middleware" => "auth"], function () {

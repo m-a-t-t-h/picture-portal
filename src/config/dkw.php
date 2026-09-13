@@ -1,6 +1,9 @@
 <?php
 
 return [
+
+    "APP_DEBUG"                       => env("APP_DEBUG", FALSE),
+
     // ---- The top level collection ID, as defined in AlbumRoots
     //
     "ROOT_COLLECTION_ID"              => env("DKW_ROOT_COLLECTION_ID"),

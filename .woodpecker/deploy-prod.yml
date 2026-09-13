@@ -5,7 +5,8 @@
 
 when:
   - event: push
-    evaluate: '(CI_COMMIT_MESSAGE contains "[#staging]")'
+    evaluate: '(CI_COMMIT_MESSAGE contains "[#prod]")'
+    branch: main
 
 steps:
 
@@ -34,9 +35,9 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-            mkdir -p $DEPLOYMENT_PATH/staging &&
-            mkdir -p $DEPLOYMENT_PATH/staging/deployments &&
-            mkdir -p $DEPLOYMENT_PATH/staging/webserver"
+            mkdir -p $DEPLOYMENT_PATH/prod &&
+            mkdir -p $DEPLOYMENT_PATH/prod/deployments &&
+            mkdir -p $DEPLOYMENT_PATH/prod/webserver"
 
   - name: clone_repo
     depends_on: [ setup_environment ]
@@ -52,7 +53,7 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-        cd $DEPLOYMENT_PATH/staging
+        cd $DEPLOYMENT_PATH/prod
         && git clone -b ${CI_COMMIT_BRANCH} --single-branch  $GITHUB_REPO deployments/deployment-${CI_PIPELINE_NUMBER}
         && cd deployments/deployment-${CI_PIPELINE_NUMBER}/src
         && ln -s ../../../webserver/.env"
@@ -70,7 +71,7 @@ steps:
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
-        cd $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src
+        cd $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src
         && composer install"
 
   - name: upload_built_assets
@@ -85,7 +86,7 @@ steps:
 
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-      - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
+      - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
 
 
   - name: bring_deployment_live
@@ -103,7 +104,7 @@ steps:
 
     commands:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo chown www-data:www-data $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R"
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $IMAGE_MOUNTPOINT $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/storage/app/images"
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/storage/app/images $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/images"
-      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo rm -f $DEPLOYMENT_PATH/staging/live && sudo ln -s $DEPLOYMENT_PATH/staging/deployments/deployment-${CI_PIPELINE_NUMBER}/src $DEPLOYMENT_PATH/staging/live && sudo service nginx restart"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo chown www-data:www-data $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $IMAGE_MOUNTPOINT $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src/storage/app/images"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src/storage/app/images $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/images"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo rm -f $DEPLOYMENT_PATH/prod/live && sudo ln -s $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src $DEPLOYMENT_PATH/prod/live && sudo service nginx restart"

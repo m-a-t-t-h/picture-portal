@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withSchedule(function(Schedule $schedule) {
-        $schedule->command("app:timestamp")->everyMinute();
+        //$schedule->command("app:timestamp")->everyMinute();
     })
     ->withMiddleware(function (Middleware $middleware): void {
         //

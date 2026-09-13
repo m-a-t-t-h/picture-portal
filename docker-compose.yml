@@ -12,8 +12,8 @@ services:
     volumes:
       - ./src:/var/www/html
       - ./.infra/dev/backend/php-local.ini:/usr/local/etc/php/conf.d/local.ini
-      - /home/matth/mnt/nfs/pve/dir02:/var/www/html/storage/app/images/svr9
-      - /home/matth/mnt/nfs/pve/Main:/var/www/html/storage/app/images/svr5
+      - /home/matth/mnt/nfs/pve/dir02:/var/www/html/storage/app/images/col9
+      - /home/matth/mnt/nfs/pve/Main:/var/www/html/storage/app/images/col5
 
   frontend:
     depends_on:
@@ -26,8 +26,8 @@ services:
       - '8686:80'
     volumes:
       - ./src:/var/www/html
-      - /home/matth/mnt/nfs/pve/dir02:/var/www/html/storage/app/images/svr9
-      - /home/matth/mnt/nfs/pve/Main:/var/www/html/storage/app/images/svr5
+      - /home/matth/mnt/nfs/pve/dir02:/var/www/html/storage/app/images/col9
+      - /home/matth/mnt/nfs/pve/Main:/var/www/html/storage/app/images/col5
     links:
       - backend
 

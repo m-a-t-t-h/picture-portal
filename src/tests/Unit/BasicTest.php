@@ -15,6 +15,6 @@ class BasicTest extends TestCase
         $hash = "7259fc1d03a6391ed1521cf1cecf4c09a692dd15bc8783c14dc2fe2c8f4a343e";
         $path = ImgSrv::hashToPath($hash);
 
-        self::assertEquals("/svr5/Photos/2010/2010-06-24 - Farnborough Air Show/DSCF4560.JPG", $path);
+        self::assertEquals("col5/Photos/2010/2010-06-24 - Farnborough Air Show/DSCF4560.JPG", $path);
     }
 }

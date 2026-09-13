@@ -21,7 +21,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(4, $results);
+        self::assertCount(2, $results);
     }
 
     public function testTag_3021_PublicEnforced()
@@ -43,7 +43,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(2, $results);
+        self::assertCount(1, $results);
     }
 
     public function testTag_3022_PublicEnforced()
@@ -54,7 +54,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(2, $results);
+        self::assertCount(1, $results);
     }
 
     public function testTags_2448_2594_PublicEnforced()
