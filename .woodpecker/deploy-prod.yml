@@ -1,0 +1,110 @@
+#
+# ssh_deployment_path               /var/www/domains/webdevops.uk/pictureportal
+# image_mountpoint                  /var/www/domains/webdevops.uk/pictureportal/.images
+#
+
+when:
+  - event: push
+    evaluate: '(CI_COMMIT_MESSAGE contains "[#prod]")'
+    branch: main
+
+steps:
+
+  - name: npm_build
+    image: bash
+    commands:
+      - docker run -v ".:/usr/src/app"  -w /usr/src/app/src -i node:24.11.1 sh -c "npm i && npm run build"
+      - pwd
+      - ls -al
+      - ls -al src/
+      - ls -al src/public
+      - ls -al src/public/build
+      - ls -al src/public/build/assets
+      - more   src/public/build/manifest.json
+
+
+  - name: setup_environment
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
+            mkdir -p $DEPLOYMENT_PATH/prod &&
+            mkdir -p $DEPLOYMENT_PATH/prod/deployments &&
+            mkdir -p $DEPLOYMENT_PATH/prod/webserver"
+
+  - name: clone_repo
+    depends_on: [ setup_environment ]
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+      GITHUB_REPO:      { from_secret: github_repo }
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
+        cd $DEPLOYMENT_PATH/prod
+        && git clone -b ${CI_COMMIT_BRANCH} --single-branch  $GITHUB_REPO deployments/deployment-${CI_PIPELINE_NUMBER}
+        && cd deployments/deployment-${CI_PIPELINE_NUMBER}/src
+        && ln -s ../../../webserver/.env"
+
+  - name: composer_install
+    depends_on: [ clone_repo ]
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "
+        cd $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src
+        && composer install"
+
+  - name: upload_built_assets
+    depends_on: [ composer_install ]
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
+
+
+  - name: bring_deployment_live
+
+    depends_on: [ composer_install, upload_built_assets ]
+    image: bash
+
+    environment:
+      SSH_PRIVATE_KEY:  { from_secret: athena_deploy_key }
+      NGINX_PATH:       { from_secret: nginx_vhost_path }
+      SSH_USERNAME:     { from_secret: ssh_deploy_username }
+      TARGET_SERVER:    { from_secret: ssh_deploy_target_server }
+      DEPLOYMENT_PATH:  { from_secret: ssh_deployment_path }
+      IMAGE_MOUNTPOINT: { from_secret: image_mountpoint}
+
+    commands:
+      - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo chown www-data:www-data $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/ -R"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $IMAGE_MOUNTPOINT $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src/storage/app/images"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo ln -s $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src/storage/app/images $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/images"
+      - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USERNAME@$TARGET_SERVER "sudo rm -f $DEPLOYMENT_PATH/prod/live && sudo ln -s $DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src $DEPLOYMENT_PATH/prod/live && sudo service nginx restart"
