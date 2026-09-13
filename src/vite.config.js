@@ -26,5 +26,9 @@ export default defineConfig({
             ignored: ['**/storage/framework/views/**'],
         },
     },
-    base: "/"
+    base: "/",
+
+    build: {
+        outDir: "public/build"
+    }
 });
