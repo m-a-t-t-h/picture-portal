@@ -20,6 +20,10 @@
                  'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+.naff {
+    background-blend-mode: color-dodge;
+}
+
 .fustat-normal {
     font-family:         "Fustat", sans-serif;
     font-optical-sizing: auto;
@@ -73,11 +77,7 @@
 .media-loop {
     @apply grid ;
     @apply grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
-
-
 }
-
-
 
 .auth {
     .card {
