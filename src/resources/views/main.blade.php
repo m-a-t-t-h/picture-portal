@@ -1,14 +1,15 @@
 <!DOCTYPE html>
+<!--    Hello world! -->
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name') }}</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}"/>
-    <link rel="manifest" href="manifest.json">
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
+<title>{{ config('app.name') }}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}"/>
+<link rel="manifest" href="/manifest.json">
+@if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+@vite(['resources/css/app.js', 'resources/js/app.css'])
+@endif
 </head>
 
 <body><div id="app_root"></div></body>
