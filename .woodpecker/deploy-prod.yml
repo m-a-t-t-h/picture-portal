@@ -14,14 +14,6 @@ steps:
     image: bash
     commands:
       - docker run -v ".:/usr/src/app"  -w /usr/src/app/src -i node:24.11.1 sh -c "npm i && npm run build"
-      - pwd
-      - ls -al
-      - ls -al src/
-      - ls -al src/public
-      - ls -al src/public/build
-      - ls -al src/public/build/assets
-      - more   src/public/build/manifest.json
-
 
   - name: setup_environment
     image: bash
