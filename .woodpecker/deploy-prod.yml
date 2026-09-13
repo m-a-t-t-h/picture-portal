@@ -80,7 +80,6 @@ steps:
       - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
       - scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa src/public/build/*  $SSH_USERNAME@$TARGET_SERVER:$DEPLOYMENT_PATH/prod/deployments/deployment-${CI_PIPELINE_NUMBER}/src/public/build/
 
-
   - name: bring_deployment_live
 
     depends_on: [ composer_install, upload_built_assets ]
