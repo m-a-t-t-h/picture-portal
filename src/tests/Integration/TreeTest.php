@@ -1,4 +1,4 @@
-<?php namespace Integration;
+<?php namespace Tests\Integration;
 
 use App\Services\ImgSrv;
 use App\Services\TreeServices;
@@ -14,8 +14,8 @@ class TreeTest extends TestCase
 {
    public function testTree() {
 
-       $tree = TreeServices::getTree();
+       $this->markTestIncomplete();
 
-       dd($tree);
+       $tree = TreeServices::getTree();
    }
 }

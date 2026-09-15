@@ -1,4 +1,4 @@
-<?php namespace Integration\Models;
+<?php namespace Tests\Integration\Models;
 
 use App\Http\Api\FilterController;
 use App\Models\Images;

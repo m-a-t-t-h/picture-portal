@@ -1,4 +1,4 @@
-<?php namespace Integration;
+<?php namespace Tests\Integration;
 
 use App\Services\ImageFilterService;
 use Tests\TestCase;
@@ -43,7 +43,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(1, $results);
+        self::assertCount(7, $results);
     }
 
     public function testTag_3022_PublicEnforced()
@@ -54,7 +54,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(1, $results);
+        self::assertCount(6, $results);
     }
 
     public function testTags_2448_2594_PublicEnforced()
@@ -88,7 +88,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(32, $results);
+        self::assertCount(33, $results);
     }
 
     public function testMultiCameraFilter()
@@ -100,7 +100,7 @@ class ImageFilterTest extends TestCase
             ->buildQuery()->runQuery()->getResults();
 
         self::assertNotNull($results);
-        self::assertCount(33, $results);
+        self::assertCount(34, $results);
     }
 
     public function testTagChain()

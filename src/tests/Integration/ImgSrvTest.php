@@ -1,4 +1,4 @@
-<?php namespace Integration;
+<?php namespace Tests\Integration;
 
 use App\Services\ImageFilterService;
 use App\Services\ImgSrv;

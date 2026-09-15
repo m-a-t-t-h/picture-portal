@@ -1,6 +1,4 @@
-<?php
-
-namespace Tests\Unit;
+<?php namespace Tests\Unit;
 
 use App\Services\ImgSrv;
 use Tests\TestCase;
