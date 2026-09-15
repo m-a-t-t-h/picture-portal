@@ -4,11 +4,10 @@ namespace App\Services;
 
 use App\Models\Tags;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class TreeServices
 {
-    public static function getTree()
+    public static function getTree(): array
     {
         $root_ids = json_decode(config("dkw.ROOT_TAG_ARRAY"), TRUE);
         $tree     = [];
@@ -23,7 +22,7 @@ class TreeServices
         return $tree;
     }
 
-    protected static function pruneTree(array $tree)
+    protected static function pruneTree(array $tree): array
     {
         $public_tag_id = config("dkw.PUBLIC_TAG_ID");
 

@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -21,8 +22,6 @@ class Tags extends Model
 
     public static function match($label)
     {
-        $ret = [];
-
         $matches = Tags::where("name", $label)->get();
         foreach ($matches as $match) {
             $parent     = $match->pid;
@@ -34,13 +33,12 @@ class Tags extends Model
             } while ($parent > 0);
 
             $path_parts = join(":", array_reverse($path_parts));
-            $ret[]      = $path_parts;
         }
 
         return $matches;
     }
 
-    public function path()
+    public function path(): string
     {
         $path   = "," . $this->name;
         $tag_id = $this->pid;
@@ -105,7 +103,7 @@ class Tags extends Model
         return $tree;
     }
 
-    public static function createTreeUpwards($node_id, array $tree = [])
+    public static function createTreeUpwards($node_id, array $tree = []): array
     {
         $debug = count($tree);
 
@@ -132,7 +130,7 @@ class Tags extends Model
      *
      * @bug I'm not 100% convinced DigiKam's digitizationDate is 100% accurate
      */
-    public static function updateOnThisDayTags($month = NULL, $day = NULL)
+    public static function updateOnThisDayTags($month = NULL, $day = NULL): void
     {
         $tag_id   = config("dkw.ON_THIS_DAY_TAG_ID");
         $album_id = config("dkw.ROOT_COLLECTION_ID");
@@ -157,9 +155,9 @@ class Tags extends Model
             
             GROUP BY IM.id;
 SQL;
-        \Log::debug($sql);
+        Log::debug($sql);
 
-        DB::query($sql, [$tag_id, $album_id, $month, $day]);
+        DB::statement($sql, [$tag_id, $album_id, $month, $day]);
 
     }
 }

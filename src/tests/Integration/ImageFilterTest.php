@@ -119,7 +119,7 @@ class ImageFilterTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = (new ImageFilterService())->setCollectionId(5);
+        $this->service = new ImageFilterService()->setCollectionId(5);
 
     }
 }

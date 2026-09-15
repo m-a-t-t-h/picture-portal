@@ -13,7 +13,7 @@ class ImageFilterResultsTest extends TestCase
 {
     public function testTag_3021_PublicNotEnforced()
     {
-        $service = (new ImageFilterService())
+        $service = new ImageFilterService()
             ->setEnforcePublicTag(FALSE)
             ->setCollectionId(5)
             ->setTagFilter([3021]);

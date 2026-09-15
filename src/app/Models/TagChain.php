@@ -1,6 +1,6 @@
 <?php namespace App\Models;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class TagChain extends Model
@@ -12,7 +12,7 @@ class TagChain extends Model
      *
      * @return void
      */
-    public static function rebuild()
+    public static function rebuild():void
     {
         DB::statement("TRUNCATE TABLE tag_chain");
         $tags_list = Tags::where("id", ">", 0)->get();

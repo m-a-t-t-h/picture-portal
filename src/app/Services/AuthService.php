@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthService
 {
-    public static function isPublicEnforced()
+    public static function isPublicEnforced(): bool
     {
         switch (config("dkw.REQUIRE_PUBLIC_TAG")) {
             case "always":case 1:

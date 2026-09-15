@@ -1,9 +1,9 @@
 <?php namespace App\Services;
 
 use App\Models\Images;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class ImageFilterService
 {
@@ -101,7 +101,7 @@ class ImageFilterService
         return $this;
     }
 
-    public function runQuery()
+    public function runQuery(): self
     {
         $query  = $this->query;
         $images = $query->get();

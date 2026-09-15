@@ -13,7 +13,7 @@ use Throwable;
 #[Description('Rebuild tag_chain table')]
 class RebuildTagChain extends Command
 {
-    public function handle()
+    public function handle():void
     {
         try {
             // Not using the normal $this->info() to suppress the trailing line break

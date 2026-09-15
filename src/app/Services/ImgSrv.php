@@ -1,5 +1,7 @@
 <?php namespace App\Services;
 
+use Exception;
+use League\Glide\Server;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -7,16 +9,23 @@ class ImgSrv
 {
     public static function getImageByHash(string $hash)
     {
-        /** @var \League\Glide\Server $server */
-        $server = app("glide.server");
-        $path   = ImgSrv::hashToPath($hash);
+        /** @var Server $server */
+        try {
+            $server = app("glide.server");
+            $path   = ImgSrv::hashToPath($hash);
 
-        return $server->getImageResponse($path, ["w" => 1280]);
+            return $server->getImageResponse($path, ["w" => 1280]);
+        }
+        catch (Exception $e) {
+            Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+
+            return null;
+        }
     }
 
     public static function getThumbnailByHash(string $hash)
     {
-        /** @var \League\Glide\Server $server */
+        /** @var Server $server */
         try {
             $server = app("glide.server");
             $path   = ImgSrv::hashToPath($hash);
@@ -24,8 +33,10 @@ class ImgSrv
             return $server->getImageResponse($path, ["h" => 400]);
 
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+
+            return null;
         }
     }
 

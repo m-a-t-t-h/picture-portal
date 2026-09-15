@@ -1,7 +1,8 @@
 <?php namespace App\Http\Api;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use App\Services\AuthService;
+use App\Http\Controllers\Controller;
 use App\Services\ImageFilterService;
 use App\Services\ImageQueryMiddleware;
 
@@ -11,10 +12,9 @@ class FilterController extends Controller
 
     protected array  $raw_query_results;
     protected array  $tag_filters;
-    protected string $order_by;
     protected string $raw_sql;
 
-    public function post(array $tag_filter = [], $page = 0, $orderBy = 0)
+    public function post(array $tag_filter = [], $page = 0, $orderBy = 0): Response
     {
         $results = NULL;
         $body    = request()->all();
@@ -33,7 +33,7 @@ class FilterController extends Controller
         }
 
         if (count($tag_filter)) {
-            $results = (new ImageFilterService())
+            $results = new ImageFilterService()
                 ->setPageSize(config("dkw.PAGE_SIZE"))
                 ->setPage($page)
                 ->setTagFilter($tag_filter)

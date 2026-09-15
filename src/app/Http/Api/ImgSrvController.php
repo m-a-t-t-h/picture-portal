@@ -1,9 +1,13 @@
 <?php namespace App\Http\Api;
 
-use App\Http\Controllers\Controller;
+use Exception;
 use App\Services\ImgSrv;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ImgSrvController extends Controller
 {
@@ -17,13 +21,14 @@ class ImgSrvController extends Controller
      * @todo Return placeholder image when not found
      */
 
-    public function getThumbnail(string $hash)
+    public function getThumbnail(string $hash): StreamedResponse
     {
         try {
             return ImgSrv::getThumbnailByHash($hash);
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+
             return config("dkw.APP_DEBUG") ? $e->getMessage() : "";
         }
     }
@@ -37,13 +42,14 @@ class ImgSrvController extends Controller
      *
      * @todo Return placeholder image when not found
      */
-    public function getImage(string $hash)
+    public function getImage(string $hash): StreamedResponse
     {
         try {
             return ImgSrv::getImageByHash($hash);
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+
             return config("dkw.APP_DEBUG") ? $e->getMessage() : "";
         }
     }
@@ -51,11 +57,11 @@ class ImgSrvController extends Controller
     /**
      * @param $img_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      *
      * @todo Eloquentify this query, in a service method
      */
-    public function info($img_id)
+    public function info($img_id):Response
     {
         $sql = <<<SQL
 

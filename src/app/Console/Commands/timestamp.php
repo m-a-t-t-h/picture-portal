@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -13,8 +14,8 @@ class timestamp extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle():void
     {
-        \Log::debug("Timestamp: " . date("H:i:s"));
+        Log::debug("Timestamp: " . date("H:i:s"));
     }
 }

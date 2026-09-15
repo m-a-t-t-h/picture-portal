@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\Log;
 
 trait ImageQueryMiddleware
 {
-    protected int   $page;
-    protected array $excluded_tags;
+    protected int    $page;
+    protected string $order_by;
+    protected array  $excluded_tags;
 
     protected function newQuery(): self
     {
@@ -35,13 +36,14 @@ trait ImageQueryMiddleware
         }
 
         $orderByStr = match ($this->order_by) {
-            "1" => "img_id ASC",
-            "2" => "img_id DESC",
-            "3" => "img_name ASC",
-            "4" => "img_name DESC",
-            "5" => "img_digitization_date ASC",
-            "6" => "img_digitization_date DESC",
-            "7" => "rand()"
+            "1"     => "img_id ASC",
+            "2"     => "img_id DESC",
+            "3"     => "img_name ASC",
+            "4"     => "img_name DESC",
+            "5"     => "img_digitization_date ASC",
+            "6"     => "img_digitization_date DESC",
+            "7"     => "rand()",
+            default => "rand()",
         };
 
         foreach ($tag_filters as $idx => $filter_tag_id) {
@@ -122,7 +124,7 @@ SQL;
         return $this;
     }
 
-    public function runQuery()
+    public function runQuery(): self
     {
         $this->raw_query_results = DB::select($this->raw_sql);
         Log::debug(count($this->raw_query_results) . " raw results");
@@ -142,11 +144,6 @@ SQL;
 
         return $this;
     }
-
-
-
-
-
 
 
     protected function debugLogQuery($do_it = TRUE): self
@@ -176,6 +173,7 @@ SQL;
     protected function setExcludedTags(array $excluded): self
     {
         $this->excluded_tags = $excluded;
+
         return $this;
     }
 }
