@@ -29,11 +29,13 @@ return [
     //
     "INFINITE_SCROLL_SENTINEL_OFFSET" => env("DKW_INFINITE_SCROLL_SENTINEL_OFFSET"),
 
-    "PAGE_SIZE"                => env("DKW_INFINITE_SCROLL_PAGE_SIZE"),
+    "PAGE_SIZE"          => env("DKW_INFINITE_SCROLL_PAGE_SIZE"),
 
     // ---- The DigiKam tag that corresponds to the "OnThisDay" label
     //
-    "ON_THIS_DAY_TAG_ID"       => env("DKW_ON_THIS_DAY_TAG_ID"),
+    "ON_THIS_DAY_TAG_ID" => env("DKW_ON_THIS_DAY_TAG_ID"),
+
+    "GLIDE_CACHE_DISK"         => env("DKW_GLIDE_CACHE_DISK", "glide_local_cache"),
 
     // ---- If the mountpoint requires a subdirectory to the image source,
     //      specify it here
