@@ -25,8 +25,6 @@ class TagChain extends Model
             $depth     = 1;
             $parent    = NULL;
 
-            print "\n[$tag]\n";
-
             while ($pid) {
                 $prev   = $parent;
                 $parent = Tags::where("id", $pid)->first();
@@ -43,8 +41,6 @@ class TagChain extends Model
             $tag_chain = ",$tag_chain,";
 
             DB::insert("INSERT INTO tag_chain VALUES (?, ?, ?, ?, ?)", [$tag->id, $tag->name, $tag_path, $tag_chain, $depth]);
-
-            print "$tag_chain\n";
         }
     }
 }
