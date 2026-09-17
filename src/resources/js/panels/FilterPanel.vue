@@ -48,7 +48,6 @@ const orderByOptions = [
     {label: 'ID (desc)', value: '2'},
     {label: 'Filename (asc)', value: '3'},
     {label: 'Filename (desc)', value: '4'},
-
 ];
 
 onMounted(async () => {

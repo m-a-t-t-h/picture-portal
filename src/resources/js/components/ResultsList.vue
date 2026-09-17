@@ -1,10 +1,12 @@
 <script setup>
-import {onMounted, reactive, ref, toRaw} from 'vue';
+import {onMounted, reactive, ref, toRaw, watch} from 'vue';
 import {useStateStore} from "../services/state.js";
 import {useRouter} from "vue-router";
 import MediaFactory from "./results/MediaFactory.vue";
 import MediaHeader from "./results/MediaHeader.vue";
 import MediaFooter from "./results/MediaFooter.vue";
+import SelectOrderBy from "./toolbar/SelectOrderBy.vue";
+import ResultsToolbar from "./toolbar/ResultsToolbar.vue";
 
 let resultsList = reactive([]);
 const state = useStateStore();
@@ -71,11 +73,15 @@ onMounted(() => {
     window.addEventListener('resize', checkVisibility);
     loadMore();
 });
+
 </script>
 
 <template>
     <div class="bg-white">
         <div class="shield fixed top-0 left-0 w-full h-full bg-white/90 z-10" v-if="showShield"></div>
+
+        <ResultsToolbar></ResultsToolbar>
+
 
         <div v-if="resultsList.value" class="media-loop gap-1">
             <div class="wrapper" v-for="(photo, idx) in resultsList.value" :key="photo.id">
@@ -96,19 +102,25 @@ onMounted(() => {
 <style scoped>
 @reference "tailwindcss";
 
+.toolbar {
+    @apply fixed -mt-12;
+    @apply min-h-12 h-12 w-full;
+    @apply flex items-center;
+    @apply border;
+    @apply bg-white;
+}
+
+.media-loop {
+    @apply mt-12;
+    @apply grid ;
+    @apply grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
+}
+
 .wrapper {
     @apply flex flex-col ;
-    @apply  w-full;
+    @apply w-full;
     @apply bg-slate-50 border border-slate-300 rounded-md;
 
-    .img_rating {
-        @apply p-0;
-
-        .img_rating_star {
-            @apply flex;
-            @apply bg-white/50 w-4 min-h-auto;
-        }
-    }
 
     .img_id {
         @apply w-full justify-end flex;

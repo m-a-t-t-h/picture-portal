@@ -54,3 +54,15 @@ const state = useStateStore();
         </div>
     </div>
 </template>
+<style scoped>
+@reference "tailwindcss";
+
+.img_rating {
+    @apply p-0;
+
+    .img_rating_star {
+        @apply flex;
+        @apply bg-white/50 w-4 min-h-auto;
+    }
+}
+</style>
