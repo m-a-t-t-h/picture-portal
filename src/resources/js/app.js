@@ -12,6 +12,8 @@ import Footer from "./components/Footer.vue";
 import ImageView from "./pages/ImageView.vue";
 import LogoutComponent from "./components/LogoutComponent.vue";
 
+import "vue-data-ui/style.css";
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [

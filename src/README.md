@@ -1,5 +1,7 @@
 # PicturePortal
 
+---
+
 ## Description ##
 
 You're an avid digital photographer with a large collection of well managed and tagged
