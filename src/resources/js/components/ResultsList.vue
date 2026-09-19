@@ -17,6 +17,7 @@ let layoutHook = ref("layout-hook");
 let isInView = false;
 
 function checkVisibility() {
+
     const element = window.document.querySelector("#sentinel");
     if (!element) return;
 
@@ -31,19 +32,6 @@ function checkVisibility() {
 }
 
 onMounted(() => {
-
-    PicturePortal.logComponentLoaded("ResultsList");
-    console.log("  On load, ResultsList count: [" + resultsList.value?.count + "]");
-    console.log(resultsList.value);
-
-    // if (!resultsList.value.length) {
-    //     console.log("  No cached results, loading more from page " + state.filterPage);
-    //     state.prefs.page = 0;
-    //     api.loadMore();
-    // } else {
-    //     console.log("  Using cached results from page " + state.filterPage);
-    //     resultsList.value = resultsList.value;
-    // }
 
     state.prefs.page = 0;
     api.loadMore();
@@ -61,7 +49,6 @@ onMounted(() => {
         layoutHook.value.classList.remove(event.detail.oldlayout);
         layoutHook.value.classList.add(event.detail.layout.value);
     })
-
     window.addEventListener("sentinel-exposed", function (event) {
         console.log("sentinal-exposed: page [" + event.detail.page + "]");
         if (event.detail.page === state.filterPage) {
@@ -71,14 +58,14 @@ onMounted(() => {
         }
     });
     window.addEventListener("data-loaded", function (event) {
-        console.log("DATA", event.detail);
-        console.log("Initial ID of new data: " + event.detail[0].img_id)
-
-        if (resultsList.value?.length)
+        if (resultsList.value?.length) {
             resultsList.value.push(...event.detail);
-        else
+        } else {
             resultsList.value = event.detail;
+        }
+        window.setTimeout(checkVisibility, 500);
     });
+
 });
 
 </script>
@@ -94,8 +81,8 @@ onMounted(() => {
 
         <div v-if="resultsList.value" ref="layoutHook" :class="'overflow-scroll media-loop ' + state.prefs.layout">
             <div v-for="(photo, idx) in resultsList.value" :key="photo.id">
-                <div v-if="idx === resultsList.value.length-5" id="sentinel" ref="sentinel">
-                    <MediaFactory :photo></MediaFactory>
+                <div v-if="idx === resultsList.value.length-2" id="sentinel" ref="sentinel">
+                    <MediaFactory class="border-2 border-red-500" :photo></MediaFactory>
                 </div>
                 <div v-else>
                     <MediaFactory :photo></MediaFactory>

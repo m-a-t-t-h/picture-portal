@@ -3,9 +3,7 @@ import {useStateStore} from "./state.js";
 
 export default class PicturePortal {
 
-    static logComponentLoaded(component) {
-        console.log("Component mounted: " + component);
-    }
+
 
     static async loadMore() {
         const state = useStateStore();

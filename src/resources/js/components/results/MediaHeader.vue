@@ -1,6 +1,7 @@
 <script setup>
 import {useStateStore} from "../../services/state.js";
 import MediaFilename from "./MediaFilename.vue";
+import MediaImageSequence from "./MediaImageSequence.vue";
 
 defineProps({
     photo: Object,
@@ -12,6 +13,7 @@ const state = useStateStore();
 <template>
     <div class="media-header">
         <MediaFilename :photo="photo"></MediaFilename>
+        <MediaImageSequence :photo></MediaImageSequence>
     </div>
 </template>
 

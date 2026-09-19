@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ImageFilterService
 {
-    private Builder    $query;
-    private Collection $results;
-    private array      $tag_filters;
-    private array      $camera_filter;
-    private string     $order_by;
-    private int        $page_size;
-    private int        $page;
-    private bool       $enforce_public_tag;
-    private int        $collection_id;
+    private Builder $query;
+    private array   $results;
+    private array   $tag_filters;
+    private array   $camera_filter;
+    private string  $order_by;
+    private int     $page_size;
+    private int     $page;
+    private bool    $enforce_public_tag;
+    private int     $collection_id;
 
     public function __construct()
     {
@@ -105,13 +105,16 @@ class ImageFilterService
     {
         $query  = $this->query;
         $images = $query->get();
+        $mapped = [];
 
         \Log::debug("Returning " . count($images) . " results");
 
-        $mapped = $images->map(function (Images $image) {
+        // @todo Hardcoded excluded tags - https://github.com/m-a-t-t-h/picture-portal/issues/7
+        $excluded_tags = ["1", "2829", "4"];
 
-            // @todo Hardcoded excluded tags - https://github.com/m-a-t-t-h/picture-portal/issues/7
-            $excluded_tags = ["1", "2829", "4"];
+        for ($idx = 0; $idx < count($images); $idx++) {
+            $image = $images[$idx];
+
             $tag_ids       = NULL;
             $information   = $image->imageInformation;
             $metadata      = $image->imageMetadata;
@@ -119,7 +122,7 @@ class ImageFilterService
 
             if (isset($information) && isset($information->format)) {
                 if ($information->format === "MP3" || $information->format === "MP4") {
-                    if (!AuthService::isMp3Mp4DirectAccessEnabled()) return NULL;
+                    if (!AuthService::isMp3Mp4DirectAccessEnabled()) continue;
                 }
             }
 
@@ -138,7 +141,8 @@ class ImageFilterService
                 }
             }
 
-            $response = [
+            $row = [
+                "img_sequence"          => $idx + ($this->page * $this->page_size),
                 "tags"                  => $filtered_tags,
                 "img_hash"              => $image->img_hash,
                 "tag_ids"               => $tag_ids,
@@ -167,7 +171,7 @@ class ImageFilterService
             if (isset($information) && isset($information->format)) {
                 if ($information->format === "MP3" || $information->format === "MP4") {
                     if (AuthService::isMp3Mp4DirectAccessEnabled()) {
-                        $response["img_path"] =
+                        $row["img_path"] =
                             "/images/" .
                             config("dkw.IMAGE_URL_PREFIX") .
                             "col" . config("dkw.ROOT_COLLECTION_ID") .
@@ -176,8 +180,9 @@ class ImageFilterService
                 }
             }
 
-            return $response;
-        });
+            $mapped[] = $row;
+        }
+
 
         $this->results = $mapped;
 

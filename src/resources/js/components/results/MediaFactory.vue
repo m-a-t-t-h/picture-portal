@@ -10,6 +10,7 @@ import MediaPath from "./MediaPath.vue";
 import MediaRatingStars from "./MediaRatingStars.vue";
 import MediaTags from "./MediaTags.vue";
 import MediaType from "./MediaType.vue";
+import MediaImageSequence from "./MediaImageSequence.vue";
 
 defineProps({
     photo: Object,
@@ -28,7 +29,7 @@ const state = useStateStore();
     </div>
     <div v-else class="line">
         <div class="flex flex-col cell">
-            <MediaImageId :photo></MediaImageId>
+            <MediaImageSequence :photo></MediaImageSequence>
             <MediaType :photo></MediaType>
         </div>
         <MediaRendererMP4 class="cell" :photo="photo"></MediaRendererMP4>
