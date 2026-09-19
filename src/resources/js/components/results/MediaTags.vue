@@ -6,6 +6,7 @@ defineProps({
 });
 
 const state = useStateStore();
+
 </script>
 
 <template>
@@ -21,11 +22,10 @@ const state = useStateStore();
 @reference "tailwindcss";
 
 .img_tags {
-    @apply flex flex-row flex-wrap  items-start;
-    @apply max-w-96 min-w-95;
+    @apply flex flex-row flex-wrap  items-start gap-0.5 min-h-16 max-h-16 p-1;
 
     .img_tag {
-        @apply text-xs border-amber-50 border rounded bg-amber-100  p-1 mr-1;
+        @apply text-[8pt] border-amber-50 border rounded bg-amber-100  p-1;
     }
 }
 

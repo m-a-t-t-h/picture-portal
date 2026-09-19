@@ -1,11 +1,10 @@
 <script setup>
 import {useStateStore} from "../../services/state.js";
 import {computed} from "vue";
-import { useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import {sprintf} from "sprintf-js";
+
 const router = useRouter();
-
-
 const state = useStateStore();
 const props = defineProps({
     photo: Object,
@@ -22,9 +21,7 @@ const imgClicked = function (photo) {
 
 <template>
     <div v-if="isSupported" class="img-container" @click="imgClicked(photo)">
-        <img :src="'/dw/imgsrv/thumb/' + photo.img_hash" :id="`img_${photo.img_id}`"
-             :class="'interactive ' + state.prefs.layout "
-             loading="lazy" decoding="async" :alt="photo.img_path">
+        <img :src="'/dw/imgsrv/thumb/' + photo.img_hash" :class="'interactive ' + state.prefs.layout " loading="lazy" decoding="async" :alt="photo.img_path">
         <div v-if="state.prefs.showCameraInfo" class="camera-info">
             <div class="flex flex-row items-center">
                 <div>{{ photo.camera_model }}</div>
@@ -56,26 +53,26 @@ const imgClicked = function (photo) {
 
 .img-container {
 
+    @apply flex items-center justify-center mx-auto;
+
     img.interactive {
-        @apply  border-2 border-transparent;
-        @apply hover:border-blue-500 hover:shadow-[0_0_8px_rgb(0,0,0)];
         @apply hover:cursor-pointer;
     }
 
-    .layout-1 {
-        @apply mx-auto w-full min-w-full;
-        @apply w-100 min-h-100 max-h-100;
+    .layout-comfy {
         @apply transition-all duration-200;
+        @apply min-h-100 max-h-100 w-full;
         @apply object-cover object-[50%_20%];
     }
 
-    .layout-2 {
-        @apply w-100 min-h-100 max-h-100;
-        @apply object-cover;
-        @apply rounded;
+    .layout-tight {
+        @apply transition-all duration-200;
+        @apply min-h-100 max-h-100 h-100;
+        @apply object-cover object-[50%_50%];
     }
 
-    .layout-3 {
+    .layout-table {
+        @apply transition-all duration-200;
         @apply h-16 w-16;
         @apply object-cover;
     }
@@ -86,8 +83,6 @@ const imgClicked = function (photo) {
         @apply bg-slate-50/70 backdrop-blur-xs shadow-[0px_0px_15px_#fff];
         @apply rounded-sm  relative inset-0   text-slate-700  text-xs;
     }
-
-
 }
 
 </style>

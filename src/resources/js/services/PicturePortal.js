@@ -3,8 +3,6 @@ import {useStateStore} from "./state.js";
 
 export default class PicturePortal {
 
-
-
     static async loadMore() {
         const state = useStateStore();
         const token = document.querySelector('meta[name="csrf-token"]').content;
@@ -27,4 +25,5 @@ export default class PicturePortal {
             });
         }
     }
+
 }

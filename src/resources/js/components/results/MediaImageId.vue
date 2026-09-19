@@ -17,8 +17,13 @@ const state = useStateStore();
 <style scoped>
 @reference "tailwindcss";
 
-.layout-3 .img_id {
+.img_id {
+    @apply p-3;
+}
+
+.layout-table .img_id {
     @apply text-xs;
     @apply min-w-12 w-12 text-center;
+    @apply p-3;
 }
 </style>

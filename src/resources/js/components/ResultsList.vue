@@ -3,11 +3,7 @@ import {onMounted, reactive, ref} from 'vue';
 import {useStateStore} from "../services/state.js";
 import {useRouter} from "vue-router";
 import MediaFactory from "./results/MediaFactory.vue";
-import SelectOrderBy from "./toolbar/SelectOrderBy.vue";
-import SelectLayout from "./toolbar/SelectLayout.vue";
-import PageNumber from "./toolbar/PageNumber.vue";
 import api from "../services/api.js";
-import PicturePortal from "../services/PicturePortal.js";
 
 let resultsList = reactive([]);
 const state = useStateStore();
@@ -16,145 +12,125 @@ let showShield = ref(false);
 let layoutHook = ref("layout-hook");
 let isInView = false;
 
-function checkVisibility() {
-
-    const element = window.document.querySelector("#sentinel");
-    if (!element) return;
-
-    const rect = element.getBoundingClientRect();
-    let wasntInView = !isInView;
-
-    isInView = rect.top < window.innerHeight && rect.bottom > 0;
-
-    if (wasntInView && isInView) {
-        window.dispatchEvent(new CustomEvent("sentinel-exposed", {detail: {page: state.prefs.page}}));
-    }
-}
-
 onMounted(() => {
-
     state.prefs.page = 0;
     api.loadMore();
 
-    window.addEventListener("filter-updated", function () {
+    const onFilterChanged = (event) => {
         resultsList.value = [];
         state.prefs.page = 0;
         api.loadMore();
         window.scrollTo(0, 0);
-    });
-    window.addEventListener('scroll', checkVisibility, {passive: true});
-    window.addEventListener('resize', checkVisibility);
-    window.addEventListener("layout-changed", function (event) {
-        console.log("layout-changed from " + event.detail.oldlayout + " to " + event.detail.layout.value);
+    }
+    const onLayoutChange = (event) => {
         layoutHook.value.classList.remove(event.detail.oldlayout);
         layoutHook.value.classList.add(event.detail.layout.value);
-    })
-    window.addEventListener("sentinel-exposed", function (event) {
-        console.log("sentinal-exposed: page [" + event.detail.page + "]");
-        if (event.detail.page === state.filterPage) {
-            state.prefs.page++;
-            console.log("Incremented page to " + state.prefs.page);
-            api.loadMore();
-        }
-    });
-    window.addEventListener("data-loaded", function (event) {
+    }
+    const onDataLoaded = (event) => {
         if (resultsList.value?.length) {
             resultsList.value.push(...event.detail);
         } else {
             resultsList.value = event.detail;
         }
         window.setTimeout(checkVisibility, 500);
-    });
+    }
+    const onSentinelExposed = (event) => {
+        console.log("sentinal-exposed: page [" + event.detail.page + "]");
+        if (event.detail.page === state.filterPage) {
+            state.prefs.page++;
+            console.log("Incremented page to " + state.prefs.page);
+            api.loadMore();
+        }
+    }
+    const checkVisibility = () => {
 
+        const element = window.document.querySelector("#sentinel");
+        if (!element) return;
+
+        const rect = element.getBoundingClientRect();
+        let wasntInView = !isInView;
+
+        isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+        if (wasntInView && isInView) {
+            window.dispatchEvent(new CustomEvent("sentinel-exposed", {detail: {page: state.prefs.page}}));
+        }
+    }
+
+    window.addEventListener("filter-updated", onFilterChanged);
+    window.addEventListener('scroll', checkVisibility, {passive: true});
+    window.addEventListener('resize', checkVisibility);
+    window.addEventListener("layout-changed", onLayoutChange)
+    window.addEventListener("sentinel-exposed", onSentinelExposed);
+    window.addEventListener("data-loaded", onDataLoaded);
 });
-
 </script>
 
 <template>
-    <div class="bg-white">
+    <div :class="'results-list ' + state.prefs.layout" ref="layoutHook">
         <div class="shield fixed top-0 left-0 w-full h-full bg-white/90 z-10" v-if="showShield"></div>
-        <div class="toolbar">
-            <SelectOrderBy></SelectOrderBy>
-            <SelectLayout></SelectLayout>
-            <PageNumber></PageNumber>
-        </div>
 
-        <div v-if="resultsList.value" ref="layoutHook" :class="'overflow-scroll media-loop ' + state.prefs.layout">
-            <div v-for="(photo, idx) in resultsList.value" :key="photo.id">
-                <div v-if="idx === resultsList.value.length-2" id="sentinel" ref="sentinel">
-                    <MediaFactory class="border-2 border-red-500" :photo></MediaFactory>
+        <div v-if="resultsList.value" :class="'media-loop'">
+            <div v-for="(photo, idx) in resultsList.value" :key="photo.id" class="media-item">
+                <div v-if="idx === resultsList.value.length-5" id="sentinel" ref="sentinel">
+                    <MediaFactory :photo></MediaFactory>
                 </div>
                 <div v-else>
                     <MediaFactory :photo></MediaFactory>
                 </div>
             </div>
         </div>
-
         <div v-else class="flex flex-col justify-center items-center border p-12 m-12 rounded bg-gray-100">
             <div class="font-bold text-xl">Welcome!</div>
             <div class="mt-12">Use the filter icon in the footer toolbar to start</div>
         </div>
     </div>
+
 </template>
 
 <style scoped>
 @reference "tailwindcss";
 
-.toolbar {
-    @apply fixed -mt-12 z-10;
-    @apply min-h-12 h-12 w-full;
-    @apply flex flex-row items-center;
-    @apply border;
-    @apply bg-white;
+.results-list {
+    @apply p-1;
+    @apply md:mt-12 mb-12;
 }
 
-.toolbar-element {
-    @apply flex items-center px-1 gap-x-2;
-    @apply text-xs;
+.media-item {
+    @apply h-full min-h-full;
+    @apply shadow-[0_0_20px_#333];
+}
+
+.layout-comfy {
+    .media-loop {
+        @apply p-1 pt-2;
+        @apply grid;
+        @apply grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3;
+
+        .media-item {
+            @apply hover:border-[rgba(0,0,255,1)] ;
+        }
+    }
+}
+
+.layout-tight {
+    .media-loop {
+        @apply p-1 pt-2;
+        @apply grid;
+        @apply grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-1;
+    }
 }
 
 .media-loop {
-    @apply mt-12;
-
-    &.layout-1 {
-        @apply grid ;
-        @apply grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-1;
-    }
-
-    &.layout-2 {
-        @apply grid ;
-        @apply grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1;
-    }
-
-    &.layout-3 {
-        @apply grid grid-cols-1;
+    .media-item {
+        @apply border-4 border-transparent rounded;
     }
 }
 
-
-.wrapper.layout-1 {
-    @apply flex flex-col ;
-    @apply w-full;
-    @apply bg-slate-50 border border-slate-300 rounded-md;
-    @apply border-4;
-
-    .img_id {
-        @apply w-full justify-end flex;
-    }
-}
-
-.wrapper.layout-3 {
-    @apply flex flex-row min-w-full;
-
-
-    & > :nth-child(2) {
-        @apply min-w-100;
-        @apply bg-blue-500;
-    }
-
-    & > :nth-child(3) {
-        @apply min-w-100;
-        @apply bg-green-200;
+.layout-table {
+    .media-loop {
+        @apply h-20;
+        @apply flex flex-col items-start;
     }
 }
 

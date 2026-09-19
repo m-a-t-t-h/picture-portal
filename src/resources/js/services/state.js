@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 
-const key = "state-0.6";
+const key = "state-0.9";
 
 export const useStateStore = defineStore(key, {
 
@@ -20,7 +20,7 @@ export const useStateStore = defineStore(key, {
         },
         prefs: {
             orderBy: "1",
-            layout: "layout-1",
+            layout: "layout-comfy",
             page: 0,
 
             results: [],

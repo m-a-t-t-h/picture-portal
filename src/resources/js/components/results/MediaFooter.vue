@@ -14,10 +14,10 @@ const state = useStateStore();
 
 <template>
     <div class="media-footer">
-        <MediaTags :photo="photo"></MediaTags>
-        <MediaTimestamp :photo="photo"></MediaTimestamp>
-        <MediaImageId :photo="photo"></MediaImageId>
-        <MediaRatingStars :photo="photo"></MediaRatingStars>
+        <slot name="footer-1"/>
+        <slot name="footer-2"/>
+        <slot name="footer-3"/>
+        <slot name="footer-4"/>
     </div>
 </template>
 
@@ -26,8 +26,5 @@ const state = useStateStore();
 
 .media-footer {
     @apply text-xs;
-    @apply whitespace-nowrap;
-    @apply m-0.5 p-1 rounded-sm;
-    @apply bg-slate-50;
 }
 </style>

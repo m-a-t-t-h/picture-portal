@@ -154,6 +154,7 @@ class ImageFilterService
                 'img_width'             => $information?->width,
                 'img_height'            => $information?->height,
                 'img_format'            => $information?->format,
+                "img_extension"         => pathinfo($image->path, PATHINFO_EXTENSION),
                 'img_size'              => $image->filesize,
                 'img_path'              => $image->path,
                 'camera_make'           => $metadata?->make,

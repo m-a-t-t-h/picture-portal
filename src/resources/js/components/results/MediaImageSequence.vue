@@ -17,7 +17,7 @@ const state = useStateStore();
 <style scoped>
 @reference "tailwindcss";
 
-.layout-3 .img_sequence {
+.layout-table .img_sequence {
     @apply text-xs;
     @apply min-w-12 w-12 text-center;
 }

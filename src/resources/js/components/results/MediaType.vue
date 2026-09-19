@@ -17,7 +17,7 @@ const state = useStateStore();
 <style scoped>
 @reference "tailwindcss";
 
-.layout-3 .media_format {
+.layout-table .media_format {
     @apply text-xs;
 }
 </style>
