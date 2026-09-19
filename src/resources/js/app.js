@@ -12,6 +12,8 @@ import Footer from "./components/Footer.vue";
 import ImageView from "./pages/ImageView.vue";
 import LogoutComponent from "./components/LogoutComponent.vue";
 
+
+
 import "vue-data-ui/style.css";
 
 const router = createRouter({
@@ -44,7 +46,7 @@ const router = createRouter({
         }
     ],
 
-    scrollBehavior(to, from, savedPosition) {
+    _scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {
             if (to.fullPath === "/dw") {
                 return {

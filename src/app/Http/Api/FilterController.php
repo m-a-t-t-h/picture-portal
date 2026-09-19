@@ -21,6 +21,8 @@ class FilterController extends Controller
         if (!$page) $page = $body["page"];
         if (!$orderBy) $orderBy = $body["orderBy"];
 
+        \Log::debug("Loading more results: Page [$page]");
+
         if (!count($tag_filter)) {
             $tag_filter = json_decode($body["filter"], TRUE);
 

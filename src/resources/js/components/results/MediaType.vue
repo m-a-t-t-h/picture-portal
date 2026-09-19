@@ -9,20 +9,15 @@ const state = useStateStore();
 </script>
 
 <template>
-    <div v-if="state.prefs.showFilename" class="media-filename ">
-        <div class="inner">{{ photo.img_name }}</div>
+    <div v-if="state.prefs.showImageId" class="media_format">
+        {{ photo.img_format }}
     </div>
 </template>
 
 <style scoped>
 @reference "tailwindcss";
 
-.media-filename {
-    @apply text-sm;
-    @apply bg-amber-100;
-    @apply flex-1;
-
-    .inner {
-    }
+.layout-3 .media_format {
+    @apply text-xs;
 }
 </style>

@@ -22,6 +22,7 @@ const state = useStateStore();
 
 .img_tags {
     @apply flex flex-row flex-wrap  items-start;
+    @apply max-w-96 min-w-95;
 
     .img_tag {
         @apply text-xs border-amber-50 border rounded bg-amber-100  p-1 mr-1;

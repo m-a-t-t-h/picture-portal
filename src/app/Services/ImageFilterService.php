@@ -106,6 +106,8 @@ class ImageFilterService
         $query  = $this->query;
         $images = $query->get();
 
+        \Log::debug("Returning " . count($images) . " results");
+
         $mapped = $images->map(function (Images $image) {
 
             // @todo Hardcoded excluded tags - https://github.com/m-a-t-t-h/picture-portal/issues/7
@@ -149,6 +151,7 @@ class ImageFilterService
                 'img_height'            => $information?->height,
                 'img_format'            => $information?->format,
                 'img_size'              => $image->filesize,
+                'img_path'              => $image->path,
                 'camera_make'           => $metadata?->make,
                 'camera_model'          => $metadata?->model,
                 'camera_lens'           => $metadata?->lens,
