@@ -9,21 +9,17 @@ const state = useStateStore();
 </script>
 
 <template>
-    <div v-if="state.prefs.showImageId" class="img_id">
-        #{{ photo.img_id }}
+    <div v-if="state.prefs.showCaption" class="img_caption">
+        {{ photo.img_caption }}
     </div>
 </template>
-
 <style scoped>
 @reference "tailwindcss";
 
-.img_id {
-    @apply p-3;
+.img_caption {
+    @apply  p-1 mt-1 text-sm ;
+    @apply bg-slate-100/50;
+    @apply border-slate-300/50 border-1;
 }
 
-.layout-table .img_id {
-    @apply text-xs;
-    @apply min-w-12 w-12 text-center;
-    @apply p-3;
-}
 </style>
