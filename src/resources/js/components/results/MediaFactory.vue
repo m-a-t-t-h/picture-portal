@@ -13,6 +13,7 @@ import MediaImageSequence from "./MediaImageSequence.vue";
 import MediaFilename from "./MediaFilename.vue";
 import MediaTimestamp from "./MediaTimestamp.vue";
 import MediaImageId from "./MediaImageId.vue";
+import MediaCaption from "./MediaCaption.vue";
 
 defineProps({
     photo: Object,
@@ -56,16 +57,18 @@ const state = useStateStore();
 
         <MediaFooter :photo>
             <template #footer-1>
-                <MediaRatingStars :photo></MediaRatingStars>
+                <MediaCaption :photo></MediaCaption>
             </template>
             <template #footer-2>
-                <MediaTags :photo></MediaTags>
+                <MediaRatingStars :photo></MediaRatingStars>
             </template>
             <template #footer-3>
-                <MediaImageId :photo></MediaImageId>
+                <MediaTags :photo></MediaTags>
             </template>
             <template #footer-4>
+                <MediaImageId :photo></MediaImageId>
             </template>
+
 
         </MediaFooter>
     </div>

@@ -15,7 +15,7 @@ state.page.has_footer = true;
     <div class="toolbar">
         <SelectOrderBy></SelectOrderBy>
         <SelectLayout></SelectLayout>
-        <PageNumber></PageNumber>
+        <PageNumber v-if="0"></PageNumber>
     </div>
     <ResultsList></ResultsList>
 </template>

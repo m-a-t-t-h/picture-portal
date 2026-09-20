@@ -8,7 +8,7 @@ const isSupported = computed(() => supportedFormats.has(props.photo.img_format))
 
 <template>
     <div v-if="isSupported" class="format_mp4">
-        <video controls class="max-h-100 min-h-100 w-full">
+        <video controls loop class="max-h-100 min-h-100 w-full">
             <source :src="photo.img_path">
         </video>
     </div>

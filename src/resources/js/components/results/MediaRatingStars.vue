@@ -67,11 +67,9 @@ const state = useStateStore();
     }
 
     .img_rating_star_filled {
-        @apply bg-green-500;
     }
 
     .img_rating_star_empty {
-        @apply fill-red-500;
     }
 }
 </style>

@@ -1,10 +1,12 @@
 <?php namespace App\Http\Api;
 
+use App\Models\Tags;
 use Illuminate\Http\Response;
 use App\Services\AuthService;
 use App\Http\Controllers\Controller;
 use App\Services\ImageFilterService;
 use App\Services\ImageQueryMiddleware;
+use Illuminate\Support\Facades\Log;
 
 class FilterController extends Controller
 {
@@ -14,33 +16,51 @@ class FilterController extends Controller
     protected array  $tag_filters;
     protected string $raw_sql;
 
-    public function post(array $tag_filter = [], $page = 0, $orderBy = 0): Response
+    public function post(array $tag_filter = [], $page = 0, $orderBy = 0): ?Response
     {
         $results = NULL;
-        $body    = request()->all();
-        if (!$page) $page = $body["page"];
-        if (!$orderBy) $orderBy = $body["orderBy"];
 
-        \Log::debug("Loading more results: Page [$page]");
+        try {
+            $body    = request()->all();
+            if (!$page) $page = $body["page"];
+            if (!$orderBy) $orderBy = $body["orderBy"];
 
-        if (!count($tag_filter)) {
-            $tag_filter = json_decode($body["filter"], TRUE);
+            Log::debug("Loading more results: Page [$page]");
 
             if (!count($tag_filter)) {
-                // ---- If no filter is specified, check if we're restricted to public only and return the first page.
-                if (AuthService::isPublicEnforced()) {
-                    $tag_filter = [config("dkw.PUBLIC_TAG_ID")];
+                $tag_filter = json_decode($body["filter"], TRUE);
+
+                if (!count($tag_filter)) {
+                    // ---- If no filter is specified, check if we're restricted to public only and return the first page.
+                    if (AuthService::isPublicEnforced()) {
+                        $tag_filter = [config("dkw.PUBLIC_TAG_ID")];
+                    }
                 }
             }
-        }
 
-        if (count($tag_filter)) {
-            $results = new ImageFilterService()
-                ->setPageSize(config("dkw.PAGE_SIZE"))
-                ->setPage($page)
-                ->setTagFilter($tag_filter)
-                ->setOrderBy($orderBy)
-                ->buildQuery()->runQuery()->toJson();
+            if (count($tag_filter)) {
+
+                $tags = "";
+                foreach($tag_filter as $f) {
+                    $tag = Tags::where("id", $f)->first();
+                    $tags .= "'" . $tag->name . "' AND ";
+                }
+                $tags = substr($tags, 0, -5);
+                Log::debug($tags);
+
+
+                $results = new ImageFilterService()
+                    ->setPageSize(config("dkw.PAGE_SIZE"))
+                    ->setPage($page)
+                    ->setTagFilter($tag_filter)
+                    ->setOrderBy($orderBy)
+                    ->buildQuery()
+                    ->runQuery()
+                    ->toJson();
+            }
+        }
+        catch (\Exception $e) {
+            Log::error($e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
         }
 
         return response($results, 200)->header("Content-Type", "application/json");

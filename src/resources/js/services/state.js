@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 
-const key = "state-0.9";
+const key = "state-0.10";
 
 export const useStateStore = defineStore(key, {
 
@@ -33,6 +33,7 @@ export const useStateStore = defineStore(key, {
             showImageId: false,
             showRating: false,
             showCameraInfo: false,
+            showCaption: true,
             selected_photo: null,
         },
         auth: {
@@ -75,19 +76,13 @@ export const useStateStore = defineStore(key, {
         setTagFilter(filter) {
             this.prefs.tag_filter = filter;
             window.dispatchEvent(new CustomEvent("filter-updated", {
-                detail: {
-                    filter: filter,
-                    orderBy: this.prefs.orderBy
-                }
+                detail: {filter: filter, orderBy: this.prefs.orderBy}
             }));
         },
         setOrderBy(value) {
             this.prefs.orderBy = value;
             window.dispatchEvent(new CustomEvent("filter-updated", {
-                detail: {
-                    filter: this.prefs.tag_filter,
-                    orderBy: this.prefs.orderBy
-                }
+                detail: {filter: this.prefs.tag_filter, orderBy: this.prefs.orderBy}
             }));
         },
         setLayout(value) {
@@ -118,6 +113,9 @@ export const useStateStore = defineStore(key, {
         },
         toggleShowCameraInfo() {
             this.prefs.showCameraInfo = !this.prefs.showCameraInfo;
+        },
+        toggleShowCaption() {
+            this.prefs.showCaption = !this.prefs.showCaption;
         },
     }
 });

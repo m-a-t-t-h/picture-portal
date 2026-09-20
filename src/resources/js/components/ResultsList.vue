@@ -72,7 +72,7 @@ onMounted(() => {
 
         <div v-if="resultsList.value" :class="'media-loop'">
             <div v-for="(photo, idx) in resultsList.value" :key="photo.id" class="media-item">
-                <div v-if="idx === resultsList.value.length-5" id="sentinel" ref="sentinel">
+                <div v-if="idx === resultsList.value.length-1" id="sentinel" ref="sentinel">
                     <MediaFactory :photo></MediaFactory>
                 </div>
                 <div v-else>
