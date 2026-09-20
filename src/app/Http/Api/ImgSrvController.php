@@ -21,7 +21,7 @@ class ImgSrvController extends Controller
      * @todo Return placeholder image when not found
      */
 
-    public function getThumbnail(string $hash): StreamedResponse
+    public function getThumbnail(string $hash): ?StreamedResponse
     {
         try {
             return ImgSrv::getThumbnailByHash($hash);

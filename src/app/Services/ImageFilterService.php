@@ -4,18 +4,19 @@ use App\Models\Images;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class ImageFilterService
 {
-    private Builder    $query;
-    private Collection $results;
-    private array      $tag_filters;
-    private array      $camera_filter;
-    private string     $order_by;
-    private int        $page_size;
-    private int        $page;
-    private bool       $enforce_public_tag;
-    private int        $collection_id;
+    private Builder $query;
+    private array   $results;
+    private array   $tag_filters;
+    private array   $camera_filter;
+    private string  $order_by;
+    private int     $page_size;
+    private int     $page;
+    private bool    $enforce_public_tag;
+    private int     $collection_id;
 
     public function __construct()
     {
@@ -94,6 +95,7 @@ class ImageFilterService
 
         $this->query = $query->with($relations)
             ->addSelect(["img_hash" => Images::selectRaw("SHA2( CONCAT(Images.id, '/', Images.name) , 256) AS img_hash")->from("Images", "I2")->whereColumn("I2.id", "Images.id")])
+            ->addSelect(["img_caption"=>Images::selectRaw("comment")->from("ImageComments", "IC")->whereColumn("IC.imageid", "Images.id")->where("IC.type", "1")])
             ->where("status", Images::STATUS_NORMAL)
             ->offset($this->page * $this->page_size)
             ->limit($this->page_size);
@@ -105,11 +107,16 @@ class ImageFilterService
     {
         $query  = $this->query;
         $images = $query->get();
+        $mapped = [];
 
-        $mapped = $images->map(function (Images $image) {
+        Log::debug("Returning " . count($images) . " results");
 
-            // @todo Hardcoded excluded tags - https://github.com/m-a-t-t-h/picture-portal/issues/7
-            $excluded_tags = ["1", "2829", "4"];
+        // @todo Hardcoded excluded tags - https://github.com/m-a-t-t-h/picture-portal/issues/7
+        $excluded_tags = ["1", "2829", "4"];
+
+        for ($idx = 0; $idx < count($images); $idx++) {
+            $image = $images[$idx];
+
             $tag_ids       = NULL;
             $information   = $image->imageInformation;
             $metadata      = $image->imageMetadata;
@@ -117,7 +124,7 @@ class ImageFilterService
 
             if (isset($information) && isset($information->format)) {
                 if ($information->format === "MP3" || $information->format === "MP4") {
-                    if (!AuthService::isMp3Mp4DirectAccessEnabled()) return NULL;
+                    if (!AuthService::isMp3Mp4DirectAccessEnabled()) continue;
                 }
             }
 
@@ -136,7 +143,8 @@ class ImageFilterService
                 }
             }
 
-            $response = [
+            $row = [
+                "img_sequence"          => $idx + ($this->page * $this->page_size),
                 "tags"                  => $filtered_tags,
                 "img_hash"              => $image->img_hash,
                 "tag_ids"               => $tag_ids,
@@ -148,7 +156,10 @@ class ImageFilterService
                 'img_width'             => $information?->width,
                 'img_height'            => $information?->height,
                 'img_format'            => $information?->format,
+                "img_extension"         => pathinfo($image->path, PATHINFO_EXTENSION),
                 'img_size'              => $image->filesize,
+                'img_path'              => $image->path,
+                "img_caption"           => $image->img_caption,
                 'camera_make'           => $metadata?->make,
                 'camera_model'          => $metadata?->model,
                 'camera_lens'           => $metadata?->lens,
@@ -164,7 +175,7 @@ class ImageFilterService
             if (isset($information) && isset($information->format)) {
                 if ($information->format === "MP3" || $information->format === "MP4") {
                     if (AuthService::isMp3Mp4DirectAccessEnabled()) {
-                        $response["img_path"] =
+                        $row["img_path"] =
                             "/images/" .
                             config("dkw.IMAGE_URL_PREFIX") .
                             "col" . config("dkw.ROOT_COLLECTION_ID") .
@@ -173,15 +184,16 @@ class ImageFilterService
                 }
             }
 
-            return $response;
-        });
+            $mapped[] = $row;
+        }
+
 
         $this->results = $mapped;
 
         return $this;
     }
 
-    public function getResults(): ?Collection
+    public function getResults(): ?array
     {
         return $this->results ?? NULL;
     }
@@ -209,10 +221,12 @@ class ImageFilterService
                 $query->orderByDesc("Images.name");
                 break;
             case 5:
-                $query->orderBy("imageInformation.digitizationDate");
+                $query->leftJoin("ImageInformation", "id", "imageid");
+                $query->orderByDesc("ImageInformation.creationDate");
                 break;
             case 6:
-                $query->orderByDesc("imageInformation.digitizationDate");
+                $query->leftJoin("ImageInformation", "id", "imageid");
+                $query->orderBy("ImageInformation.creationDate");
                 break;
             case 7:
                 $query->inRandomOrder();
@@ -255,6 +269,27 @@ class ImageFilterService
         $query->whereHas('imageInformation', function ($query) {
             $query->whereNotIn('format', ['RAW-NEF', 'RAW-DNG']);
         });
+
+
+        // ---- If the incoming filter specifies the tag ID $format_mp3_tag_id then
+        //      remove that tag from the filter list and instead apply a filter on the format field
+        //
+        $format_mp3_tag_id = 2305;
+
+        if (isset($this->tag_filters)) {
+            $filtered = [];
+            foreach ($this->tag_filters as $filter) {
+                if ($filter === $format_mp3_tag_id) {
+                    $query->whereHas("imageInformation", function ($query) {
+                        $query->whereIn("format", ["MP3", "WAV", "OGG"]);
+                    });
+                } else {
+                    $filtered[] = $filter;
+                }
+                $this->tag_filters = $filtered;
+            }
+        }
+
 
         return $query;
     }

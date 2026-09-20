@@ -14,6 +14,14 @@ const isSupported = computed(() => {
 
 <template>
     <div v-if="isSupported" class="format_mp3">
-        <audio controls :src="photo.img_path"></audio>
+        <audio controls loop :src="photo.img_path" class="format_mp3"></audio>
     </div>
 </template>
+
+<style scoped>
+@reference "tailwindcss";
+
+.format_mp3 {
+    @apply w-full p-1;
+}
+</style>

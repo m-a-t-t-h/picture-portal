@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 
-const key = "state-0.3";
+const key = "state-0.10";
 
 export const useStateStore = defineStore(key, {
 
@@ -19,9 +19,12 @@ export const useStateStore = defineStore(key, {
             has_footer: true,
         },
         prefs: {
+            orderBy: "1",
+            layout: "layout-comfy",
+            page: 0,
+
             results: [],
             tag_filter: "",
-            orderBy: "1",
             showFilename: false,
             showTagsBelow: true,
             showTagId: false,
@@ -30,6 +33,7 @@ export const useStateStore = defineStore(key, {
             showImageId: false,
             showRating: false,
             showCameraInfo: false,
+            showCaption: true,
             selected_photo: null,
         },
         auth: {
@@ -54,22 +58,37 @@ export const useStateStore = defineStore(key, {
         },
         getSelectedPhoto: (state) => state.prefs.selected_photo,
         getResults: (state) => state.prefs.results,
+
+        filterSelectedTags: (state) => state.prefs.tag_filter,
+        filterOrderBy: (state) => state.prefs.orderBy,
+        filterPage: (state) => state.prefs.page,
+        filterResults: (state) => state.prefs.results,
     },
 
     actions: {
         setResults(results) {
-            this.prefs.results = results;
+            this.prefs.results.push(...results);
+            window.dispatchEvent(new CustomEvent("data-loaded", {detail: results}));
         },
         setSelectedPhoto(photo) {
             this.prefs.selected_photo = photo;
         },
         setTagFilter(filter) {
             this.prefs.tag_filter = filter;
-            window.dispatchEvent(new CustomEvent("filter-updated", {detail: {filter: filter, orderBy: this.prefs.orderBy}}));
+            window.dispatchEvent(new CustomEvent("filter-updated", {
+                detail: {filter: filter, orderBy: this.prefs.orderBy}
+            }));
         },
         setOrderBy(value) {
             this.prefs.orderBy = value;
-            window.dispatchEvent(new CustomEvent("filter-updated", {detail: {filter: this.prefs.tag_filter, orderBy: this.prefs.orderBy}}));
+            window.dispatchEvent(new CustomEvent("filter-updated", {
+                detail: {filter: this.prefs.tag_filter, orderBy: this.prefs.orderBy}
+            }));
+        },
+        setLayout(value) {
+            let old = this.prefs.layout;
+            this.prefs.layout = value;
+            window.dispatchEvent(new CustomEvent("layout-changed", {detail: {layout: value, oldlayout: old}}));
         },
         toggleShowFilename() {
             this.prefs.showFilename = !this.prefs.showFilename;
@@ -94,6 +113,9 @@ export const useStateStore = defineStore(key, {
         },
         toggleShowCameraInfo() {
             this.prefs.showCameraInfo = !this.prefs.showCameraInfo;
+        },
+        toggleShowCaption() {
+            this.prefs.showCaption = !this.prefs.showCaption;
         },
     }
 });

@@ -24,7 +24,7 @@ const emits = defineEmits(["settings-panel-toggle"]);
 
         <div class="panel-body">
             <div class="settings-group">
-                <span class="label">Above image</span>
+                <span class="label">Image settings</span>
 
                 <div class="field">
                     <label for="showFilename" class="hover:cursor-pointer" :class="{'disabled':!authed}">
@@ -38,10 +38,13 @@ const emits = defineEmits(["settings-panel-toggle"]);
                         <span>Show timestamp</span>
                     </label>
                 </div>
-            </div>
 
-            <div class="settings-group">
-                <span class="label">Below image</span>
+                <div class="field">
+                    <label for="showCaption" class="hover:cursor-pointer" >
+                        <input type="checkbox" id="showCaption" :checked="state.prefs.showCaption" @change="state.toggleShowCaption" >
+                        <span>Show caption</span>
+                    </label>
+                </div>
 
                 <div class="field">
                     <label for="showRating" class="hover:cursor-pointer" :class="{'disabled':!authed}">
@@ -81,6 +84,8 @@ const emits = defineEmits(["settings-panel-toggle"]);
                         <span>Show camera info</span>
                     </label>
                 </div>
+
+
 
             </div>
         </div>
